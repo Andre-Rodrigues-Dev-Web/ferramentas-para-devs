@@ -1,7 +1,7 @@
 
-import React from 'react';
+import * as React from 'react';
 import * as Icons from 'lucide-react';
-import { Tool } from '../../types';
+import { Tool } from '../../shared/types';
 import { Button } from '../../shared/ui/Button';
 import { useNavigate } from 'react-router-dom';
 

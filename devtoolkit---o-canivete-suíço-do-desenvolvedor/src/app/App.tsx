@@ -1,8 +1,13 @@
 
-import React from 'react';
+import * as React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import Layout from '../widgets/layout/ui/Layout';
+import LandingPage from '../pages/landing/ui/LandingPage';
 import Dashboard from '../pages/dashboard/ui/Dashboard';
+import AboutPage from '../pages/about/ui/AboutPage';
+import ContributionPage from '../pages/contribution/ui/ContributionPage';
+import BlogPage from '../pages/blog/ui/BlogPage';
 import ToolPlaceholder from '../pages/tools/ToolPlaceholder';
 import BoxShadowGenerator from '../pages/tools/BoxShadowGenerator';
 import JsonFormatter from '../pages/tools/JsonFormatter';
@@ -47,12 +52,26 @@ import CarbonCodeTool from '../pages/tools/CarbonCodeTool';
 import BoilerplateGenerator from '../pages/tools/BoilerplateGenerator';
 import { TOOLS } from '../entities/tool/model';
 
+import { ThemeProvider } from 'styled-components';
+import { theme } from './styles/theme';
+import { GlobalStyles } from './styles/GlobalStyles';
+
 const App: React.FC = () => {
   return (
-    <HashRouter>
-      <Layout>
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      <HelmetProvider>
+      <HashRouter>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contribution" element={<ContributionPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          
+          <Route path="/*" element={
+            <Layout>
+              <Routes>
+                <Route path="dashboard" element={<Dashboard />} />
           
           {/* Functional Tools */}
           <Route path="/tool/css-gradient" element={<CssGradientGenerator />} />
@@ -108,11 +127,13 @@ const App: React.FC = () => {
             )
           ))}
 
-          {/* Redirect to dashboard for unknown routes */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Layout>
+          } />
         </Routes>
-      </Layout>
-    </HashRouter>
+      </HashRouter>
+    </HelmetProvider>
+    </ThemeProvider>
   );
 };
 
