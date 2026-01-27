@@ -3,6 +3,140 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Icons from 'lucide-react';
 import { TOOLS } from '../../../entities/tool/model';
+import styled, { keyframes, css } from 'styled-components';
+
+const zoomIn = keyframes`
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+`;
+
+const Backdrop = styled.div`
+  position: fixed;
+  inset: 0;
+  background-color: rgba(2, 6, 23, 0.8); /* slate-950/80 */
+  backdrop-filter: blur(4px);
+  cursor: default;
+`;
+
+const ModalContent = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 36rem; /* max-w-xl */
+  background-color: ${({ theme }) => theme.colors.slate[900]};
+  border: 1px solid ${({ theme }) => theme.colors.slate[700]};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: ${zoomIn} 0.2s ease-out;
+`;
+
+const SearchHeader = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.slate[800]};
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 1rem 0.75rem;
+  color: ${({ theme }) => theme.colors.slate[100]};
+  font-size: 1rem;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.slate[500]};
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const Kbd = styled.kbd`
+  display: none;
+  @media (min-width: ${({ theme }) => theme.screens.sm}) {
+    display: inline-flex;
+  }
+  height: 1.25rem;
+  align-items: center;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.slate[700]};
+  background-color: ${({ theme }) => theme.colors.slate[800]};
+  padding: 0 0.375rem;
+  font-family: monospace;
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.slate[500]};
+`;
+
+const ResultsList = styled.div`
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem;
+`;
+
+const ResultItem = styled.div<{ $selected?: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  cursor: pointer;
+  transition: all 0.2s;
+
+  ${({ $selected, theme }) =>
+    $selected
+      ? css`
+        background-color: ${theme.colors.primary[600]};
+        color: ${theme.colors.white};
+      `
+      : css`
+        background-color: transparent;
+        color: ${theme.colors.slate[300]};
+        &:hover {
+          background-color: ${theme.colors.slate[800]};
+        }
+      `}
+`;
+
+const ResultItemContent = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+`;
+
+const IconWrapper = styled.span<{ $selected?: boolean }>`
+  color: ${({ $selected, theme }) => ($selected ? theme.colors.white : theme.colors.primary[400])};
+`;
+
+const CategoryText = styled.div<{ $selected?: boolean }>`
+  font-size: 0.75rem;
+  color: ${({ $selected, theme }) => ($selected ? theme.colors.primary[100] : theme.colors.slate[500])};
+`;
+
+const EmptyState = styled.div`
+  padding: 2rem;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.slate[500]};
+  
+  p {
+    margin-top: 0.75rem;
+  }
+`;
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -55,67 +189,62 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4">
-      <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={onClose}></div>
+    <Overlay>
+      <Backdrop onClick={onClose} />
       
-      <div className="relative w-full max-w-xl bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
-        <div className="flex items-center px-4 border-b border-slate-800">
-          <Icons.Search className="text-slate-500" size={20} />
-          <input
+      <ModalContent>
+        <SearchHeader>
+          <Icons.Search className="text-slate-500" size={20} color="#64748b" />
+          <SearchInput
             ref={inputRef}
             type="text"
-            className="w-full bg-transparent border-none focus:ring-0 py-4 px-3 text-slate-100 placeholder:text-slate-500"
             placeholder="Qual ferramenta você precisa?"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <kbd className="hidden sm:inline-flex h-5 items-center rounded border border-slate-700 bg-slate-800 px-1.5 font-mono text-[10px] font-medium text-slate-500">ESC</kbd>
-        </div>
+          <Kbd>ESC</Kbd>
+        </SearchHeader>
 
-        <div className="max-h-[300px] overflow-y-auto">
+        <ResultsList>
           {filteredTools.length > 0 ? (
-            <div className="p-2">
-              {filteredTools.map((tool, idx) => (
-                <div
-                  key={tool.id}
-                  className={`flex items-center justify-between px-4 py-3 rounded-lg cursor-pointer transition-colors ${
-                    idx === selectedIndex ? 'bg-blue-600 text-white' : 'hover:bg-slate-800 text-slate-300'
-                  }`}
-                  onClick={() => {
-                    navigate(`/tool/${tool.slug}`);
-                    onClose();
-                  }}
-                  onMouseEnter={() => setSelectedIndex(idx)}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className={idx === selectedIndex ? 'text-white' : 'text-blue-400'}>
-                      {getIcon(tool.icon)}
-                    </span>
-                    <div>
-                      <div className="font-medium text-sm">{tool.title}</div>
-                      <div className={`text-xs ${idx === selectedIndex ? 'text-blue-100' : 'text-slate-500'}`}>
-                        {tool.category}
-                      </div>
-                    </div>
+            filteredTools.map((tool, idx) => (
+              <ResultItem
+                key={tool.id}
+                $selected={idx === selectedIndex}
+                onClick={() => {
+                  navigate(`/tool/${tool.slug}`);
+                  onClose();
+                }}
+                onMouseEnter={() => setSelectedIndex(idx)}
+              >
+                <ResultItemContent>
+                  <IconWrapper $selected={idx === selectedIndex}>
+                    {getIcon(tool.icon)}
+                  </IconWrapper>
+                  <div>
+                    <div style={{ fontWeight: 500, fontSize: '0.875rem' }}>{tool.title}</div>
+                    <CategoryText $selected={idx === selectedIndex}>
+                      {tool.category}
+                    </CategoryText>
                   </div>
-                  <Icons.ChevronRight size={16} className={idx === selectedIndex ? 'text-white' : 'text-slate-600'} />
-                </div>
-              ))}
-            </div>
+                </ResultItemContent>
+                <Icons.ChevronRight size={16} color={idx === selectedIndex ? 'white' : '#475569'} />
+              </ResultItem>
+            ))
           ) : query ? (
-            <div className="p-8 text-center text-slate-500">
-              <Icons.SearchX size={40} className="mx-auto mb-3 opacity-20" />
+            <EmptyState>
+              <Icons.SearchX size={40} style={{ margin: '0 auto', opacity: 0.2 }} />
               <p>Nenhuma ferramenta encontrada para "{query}"</p>
-            </div>
+            </EmptyState>
           ) : (
-            <div className="p-8 text-center text-slate-500">
+            <EmptyState>
               <p>Digite o nome da ferramenta ou categoria...</p>
-            </div>
+            </EmptyState>
           )}
-        </div>
-      </div>
-    </div>
+        </ResultsList>
+      </ModalContent>
+    </Overlay>
   );
 };
 

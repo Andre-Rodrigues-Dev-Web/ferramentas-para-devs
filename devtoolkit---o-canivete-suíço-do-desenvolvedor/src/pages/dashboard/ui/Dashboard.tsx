@@ -3,6 +3,177 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as Icons from 'lucide-react';
 import { TOOLS, CATEGORIES } from '../../../entities/tool/model';
+import styled, { css } from 'styled-components';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+const Header = styled.header`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const Title = styled.h1`
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: ${({ theme }) => theme.colors.white};
+  
+  span {
+    color: ${({ theme }) => theme.colors.primary[500]};
+  }
+`;
+
+const Description = styled.p`
+  font-size: 1.125rem;
+  color: ${({ theme }) => theme.colors.slate[400]};
+  max-width: 42rem;
+`;
+
+const CategoryFilter = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`;
+
+const CategoryButton = styled.button<{ $isActive: boolean }>`
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: 1px solid ${({ $isActive, theme }) => $isActive ? 'transparent' : theme.colors.slate[800]};
+
+  ${({ $isActive, theme }) =>
+    $isActive
+      ? css`
+        background-color: ${theme.colors.primary[600]};
+        color: ${theme.colors.white};
+        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
+      `
+      : css`
+        background-color: ${theme.colors.slate[900]};
+        color: ${theme.colors.slate[400]};
+        &:hover {
+          border-color: ${theme.colors.slate[700]};
+        }
+      `}
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  
+  @media (min-width: ${({ theme }) => theme.screens.sm}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: ${({ theme }) => theme.screens.lg}) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: ${({ theme }) => theme.screens.xl}) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+`;
+
+const ToolCard = styled(Link)`
+  position: relative;
+  background-color: ${({ theme }) => theme.colors.slate[900]};
+  border: 1px solid ${({ theme }) => theme.colors.slate[800]};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  padding: 1.5rem;
+  transition: all 0.2s;
+  display: block;
+
+  &:hover {
+    transform: translateY(-0.25rem);
+    border-color: rgba(59, 130, 246, 0.5); /* blue-500/50 */
+    box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.05); /* blue-500/5 */
+  }
+
+  /* Group hover implementation for children */
+  &:hover h3 {
+    color: ${({ theme }) => theme.colors.primary[400]};
+  }
+  
+  &:hover svg.arrow-icon {
+    transform: translateX(0.25rem);
+    color: ${({ theme }) => theme.colors.primary[400]};
+  }
+`;
+
+const ToolHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+`;
+
+const IconWrapper = styled.div<{ $isImplemented: boolean }>`
+  padding: 0.75rem;
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  transition: background-color 0.2s;
+  
+  ${({ $isImplemented, theme }) =>
+    $isImplemented
+      ? css`
+        background-color: rgba(37, 99, 235, 0.1);
+        color: ${theme.colors.primary[500]};
+      `
+      : css`
+        background-color: ${theme.colors.slate[800]};
+        color: ${theme.colors.slate[600]};
+      `}
+`;
+
+const Badge = styled.span`
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+  background-color: ${({ theme }) => theme.colors.slate[800]};
+  color: ${({ theme }) => theme.colors.slate[500]};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+`;
+
+const ToolTitle = styled.h3`
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.white};
+  margin-bottom: 0.5rem;
+  transition: color 0.2s;
+`;
+
+const ToolDescription = styled.p`
+  color: ${({ theme }) => theme.colors.slate[400]};
+  font-size: 0.875rem;
+  line-height: 1.625;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+
+const ToolFooter = styled.div`
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid ${({ theme }) => theme.colors.slate[800]};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const CategoryLabel = styled.span`
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.slate[500]};
+`;
 
 const Dashboard: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('Tudo');
@@ -17,75 +188,70 @@ const Dashboard: React.FC = () => {
     : TOOLS.filter(t => t.category === activeCategory);
 
   return (
-    <div className="space-y-8">
-      <header className="space-y-4">
-        <h1 className="text-4xl font-extrabold text-white tracking-tight">
-          Sua Caixa de Ferramentas <span className="text-blue-500">Digital</span>
-        </h1>
-        <p className="text-slate-400 text-lg max-w-2xl">
+    <Container>
+      <Header>
+        <Title>
+          Sua Caixa de Ferramentas <span>Digital</span>
+        </Title>
+        <Description>
           Tudo o que você precisa para acelerar seu desenvolvimento em um só lugar. Moderno, rápido e 100% gratuito.
-        </p>
-      </header>
+        </Description>
+      </Header>
 
       {/* Categories Filter */}
-      <div className="flex flex-wrap gap-2">
-        <button
+      <CategoryFilter>
+        <CategoryButton
           onClick={() => setActiveCategory('Tudo')}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-            activeCategory === 'Tudo' 
-              ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
-              : 'bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700'
-          }`}
+          $isActive={activeCategory === 'Tudo'}
         >
           Tudo
-        </button>
+        </CategoryButton>
         {CATEGORIES.map(cat => (
-          <button
+          <CategoryButton
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              activeCategory === cat 
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
-                : 'bg-slate-900 text-slate-400 border border-slate-800 hover:border-slate-700'
-            }`}
+            $isActive={activeCategory === cat}
           >
             {cat}
-          </button>
+          </CategoryButton>
         ))}
-      </div>
+      </CategoryFilter>
 
       {/* Tools Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <Grid>
         {filteredTools.map(tool => (
-          <Link
+          <ToolCard
             key={tool.id}
             to={`/tool/${tool.slug}`}
-            className="group relative bg-slate-900 border border-slate-800 rounded-2xl p-6 transition-all hover:-translate-y-1 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/5"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className={`p-3 rounded-xl transition-colors ${tool.isImplemented ? 'bg-blue-600/10 text-blue-500' : 'bg-slate-800 text-slate-600'}`}>
+            <ToolHeader>
+              <IconWrapper $isImplemented={tool.isImplemented}>
                 {getIcon(tool.icon)}
-              </div>
+              </IconWrapper>
               {!tool.isImplemented && (
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 bg-slate-800 text-slate-500 rounded-md">
+                <Badge>
                   Em Breve
-                </span>
+                </Badge>
               )}
-            </div>
-            <h3 className="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+            </ToolHeader>
+            <ToolTitle>
               {tool.title}
-            </h3>
-            <p className="text-slate-400 text-sm leading-relaxed line-clamp-2">
+            </ToolTitle>
+            <ToolDescription>
               {tool.description}
-            </p>
-            <div className="mt-4 pt-4 border-t border-slate-800 flex items-center justify-between">
-               <span className="text-xs font-medium text-slate-500">{tool.category}</span>
-               <Icons.ArrowRight size={16} className="text-slate-600 group-hover:text-blue-400 transform group-hover:translate-x-1 transition-all" />
-            </div>
-          </Link>
+            </ToolDescription>
+            <ToolFooter>
+               <CategoryLabel>{tool.category}</CategoryLabel>
+               <Icons.ArrowRight 
+                 size={16} 
+                 className="arrow-icon" // Targeted by ToolCard:hover
+                 style={{ transition: 'all 0.2s', color: '#475569' }} 
+               />
+            </ToolFooter>
+          </ToolCard>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Container>
   );
 };
 

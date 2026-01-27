@@ -3,6 +3,138 @@ import React, { useState } from 'react';
 import { Copy, Check, Trash2, FileJson, AlertCircle } from 'lucide-react';
 import { Button } from '../../shared/ui/Button';
 import { Textarea } from '../../shared/ui/Input';
+import styled, { css } from 'styled-components';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+const Header = styled.div`
+  
+`;
+
+const Title = styled.h1`
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.white};
+`;
+
+const Description = styled.p`
+  color: ${({ theme }) => theme.colors.slate[400]};
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @media (min-width: ${({ theme }) => theme.screens.lg}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const Toolbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Label = styled.label`
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.slate[500]};
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+`;
+
+const IconButton = styled.button`
+  padding: 0.375rem;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  color: ${({ theme }) => theme.colors.slate[500]};
+  transition: all 0.2s;
+  cursor: pointer;
+  background: none;
+  border: none;
+
+  &:hover {
+    color: #f87171;
+    background-color: ${({ theme }) => theme.colors.slate[800]};
+  }
+`;
+
+const CopyButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.primary[400]};
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary[300]};
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  
+  & > * {
+    flex: 1;
+  }
+`;
+
+const OutputBox = styled.div<{ $error: boolean }>`
+  width: 100%;
+  min-height: 400px;
+  background-color: ${({ theme }) => theme.colors.slate[900]};
+  border: 2px solid ${({ theme, $error }) => $error ? 'rgba(239, 68, 68, 0.5)' : theme.colors.slate[800]};
+  border-radius: ${({ theme }) => theme.borderRadius.xl};
+  padding: 1rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.875rem;
+  white-space: pre-wrap;
+  overflow: auto;
+  max-height: 460px;
+  
+  ${({ $error }) => $error && css`
+    background-color: rgba(239, 68, 68, 0.05);
+  `}
+`;
+
+const ErrorContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: #f87171;
+`;
+
+const ErrorTitle = styled.p`
+  font-weight: 700;
+`;
+
+const ErrorMessage = styled.p`
+  margin-top: 0.25rem;
+  opacity: 0.8;
+`;
 
 const JsonFormatter: React.FC = () => {
   const [input, setInput] = useState('');
@@ -50,71 +182,68 @@ const JsonFormatter: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-white">JSON Formatter & Validator</h1>
-        <p className="text-slate-400">Embeleze, valide ou minifique seus objetos JSON instantaneamente.</p>
-      </div>
+    <Container>
+      <Header>
+        <Title>JSON Formatter & Validator</Title>
+        <Description>Embeleze, valide ou minifique seus objetos JSON instantaneamente.</Description>
+      </Header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-bold text-slate-500 uppercase tracking-widest">Input</label>
-            <div className="flex gap-2">
-              <button onClick={clear} className="p-1.5 hover:bg-slate-800 rounded text-slate-500 hover:text-red-400 transition-all">
-                <Trash2 size={16} />
-              </button>
-            </div>
-          </div>
+      <Grid>
+        <Column>
+          <Toolbar>
+            <Label>Input</Label>
+            <IconButton onClick={clear} title="Limpar">
+              <Trash2 size={16} />
+            </IconButton>
+          </Toolbar>
           <Textarea 
             placeholder="Cole seu JSON bruto aqui..." 
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="h-[400px] border-slate-800 focus:border-blue-500"
+            style={{ height: '400px', borderColor: '#1e293b' }}
           />
-          <div className="flex gap-3">
-            <Button onClick={handleFormat} className="flex-1">
-              <FileJson size={18} className="mr-2" /> Formatar
+          <ButtonGroup>
+            <Button onClick={handleFormat}>
+               Formatar
             </Button>
-            <Button variant="outline" onClick={handleMinify} className="flex-1">
+            <Button variant="outline" onClick={handleMinify}>
               Minificar
             </Button>
-          </div>
-        </div>
+          </ButtonGroup>
+        </Column>
 
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-bold text-slate-500 uppercase tracking-widest">Output</label>
-            <button 
+        <Column>
+          <Toolbar>
+            <Label>Output</Label>
+            <CopyButton 
               disabled={!output}
               onClick={copyOutput}
-              className="flex items-center gap-2 text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-30"
             >
               {copied ? <Check size={14} /> : <Copy size={14} />}
               {copied ? 'Copiado!' : 'Copiar'}
-            </button>
-          </div>
+            </CopyButton>
+          </Toolbar>
           
           <div className="relative group">
-            <div className={`w-full min-h-[400px] bg-slate-900 border-2 rounded-xl p-4 code-font text-sm whitespace-pre-wrap overflow-auto max-h-[460px] ${error ? 'border-red-500/50 bg-red-500/5' : 'border-slate-800'}`}>
+            <OutputBox $error={!!error}>
               {error ? (
-                <div className="flex items-start gap-3 text-red-400">
-                  <AlertCircle size={18} className="mt-0.5 flex-shrink-0" />
+                <ErrorContainer>
+                  <AlertCircle size={18} style={{ marginTop: '0.125rem', flexShrink: 0 }} />
                   <div>
-                    <p className="font-bold">JSON Inválido</p>
-                    <p className="mt-1 opacity-80">{error}</p>
+                    <ErrorTitle>JSON Inválido</ErrorTitle>
+                    <ErrorMessage>{error}</ErrorMessage>
                   </div>
-                </div>
+                </ErrorContainer>
               ) : output ? (
-                <pre className="text-blue-400">{output}</pre>
+                <pre style={{ color: '#60a5fa' }}>{output}</pre>
               ) : (
-                <p className="text-slate-600 italic">O resultado aparecerá aqui...</p>
+                <p style={{ color: '#475569', fontStyle: 'italic' }}>O resultado aparecerá aqui...</p>
               )}
-            </div>
+            </OutputBox>
           </div>
-        </div>
-      </div>
-    </div>
+        </Column>
+      </Grid>
+    </Container>
   );
 };
 

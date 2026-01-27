@@ -1,13 +1,30 @@
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Copy, RefreshCw, Check, Plus, Trash2, Move, LayoutGrid, FileCode, Box } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Copy, RefreshCw, Check, Plus, Trash2, Move, FileCode, Box } from 'lucide-react';
 import { Button } from '../../shared/ui/Button';
-
-interface ColorStop {
-  id: string;
-  color: string;
-  position: number;
-}
+import {
+  Container,
+  Header,
+  Title,
+  Description,
+  Grid,
+  ControlPanel,
+  SectionLabel,
+  ToggleGroup,
+  ToggleButton,
+  RangeInput,
+  Select,
+  VisualPicker,
+  PickerHandle,
+  StopItem,
+  ColorInput,
+  PreviewBox,
+  PreviewGradient,
+  CodeBlock,
+  CodePre,
+  PresetButton
+} from './CssGradientGenerator.styles';
+import { ColorStop } from './CssGradientGenerator.types';
 
 const CssGradientGenerator: React.FC = () => {
   const [type, setType] = useState<'linear' | 'radial'>('linear');
@@ -109,267 +126,209 @@ const CssGradientGenerator: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <Container>
+      <Header>
         <div>
-          <h1 className="text-3xl font-bold text-white">CSS Gradient Generator</h1>
-          <p className="text-slate-400">Crie gradientes incríveis e exporte o código CSS pronto para uso.</p>
+          <Title>CSS Gradient Generator</Title>
+          <Description>Crie gradientes incríveis e exporte o código CSS pronto para uso.</Description>
         </div>
         <Button variant="outline" onClick={reset}>
           <RefreshCw size={16} className="mr-2" /> Reset
         </Button>
-      </div>
+      </Header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 overflow-hidden">
-          <div className="space-y-6">
-            <div>
-              <label className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3 block">Tipo de Gradiente</label>
-              <div className="flex p-1 bg-slate-800 rounded-lg w-fit">
-                <button 
-                  onClick={() => setType('linear')}
-                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${type === 'linear' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
-                >
-                  Linear
-                </button>
-                <button 
-                  onClick={() => setType('radial')}
-                  className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${type === 'radial' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-slate-200'}`}
-                >
-                  Radial
-                </button>
+      <Grid>
+        <ControlPanel>
+          <div>
+            <SectionLabel>Tipo de Gradiente</SectionLabel>
+            <ToggleGroup>
+              <ToggleButton $active={type === 'linear'} onClick={() => setType('linear')}>
+                Linear
+              </ToggleButton>
+              <ToggleButton $active={type === 'radial'} onClick={() => setType('radial')}>
+                Radial
+              </ToggleButton>
+            </ToggleGroup>
+          </div>
+
+          {type === 'linear' ? (
+            <div style={{ padding: '1rem', backgroundColor: 'rgba(30, 41, 59, 0.3)', borderRadius: '0.75rem', border: '1px solid rgba(30, 41, 59, 0.5)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+                <span style={{ color: '#94a3b8', fontWeight: 500 }}>Ângulo</span>
+                <span style={{ color: '#60a5fa', fontWeight: 700 }}>{angle}°</span>
+              </div>
+              <RangeInput 
+                type="range" 
+                min="0" 
+                max="360" 
+                value={angle} 
+                onChange={(e) => setAngle(parseInt(e.target.value))}
+              />
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', color: '#475569', fontWeight: 700, padding: '0 0.25rem', marginTop: '0.25rem' }}>
+                <span>0°</span><span>90°</span><span>180°</span><span>270°</span><span>360°</span>
               </div>
             </div>
-
-            {type === 'linear' ? (
-              <div className="space-y-4 p-4 bg-slate-800/30 rounded-xl border border-slate-800/50 animate-in fade-in slide-in-from-top-2 duration-300">
-                <div className="flex justify-between text-sm">
-                  <label className="text-slate-400 font-medium">Ângulo</label>
-                  <span className="text-blue-400 font-bold">{angle}°</span>
+          ) : (
+            <div style={{ padding: '1rem', backgroundColor: 'rgba(30, 41, 59, 0.3)', borderRadius: '0.75rem', border: '1px solid rgba(30, 41, 59, 0.5)', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                <div>
+                  <SectionLabel>Shape</SectionLabel>
+                  <Select 
+                    value={radialShape}
+                    onChange={(e) => setRadialShape(e.target.value as any)}
+                  >
+                    <option value="circle">Círculo</option>
+                    <option value="ellipse">Elipse</option>
+                  </Select>
                 </div>
-                <input 
-                  type="range" 
-                  min="0" 
-                  max="360" 
-                  value={angle} 
-                  onChange={(e) => setAngle(parseInt(e.target.value))}
-                  className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                />
-                <div className="flex justify-between text-[10px] text-slate-600 font-bold px-1">
-                  <span>0°</span>
-                  <span>90°</span>
-                  <span>180°</span>
-                  <span>270°</span>
-                  <span>360°</span>
+                <div>
+                  <SectionLabel>Extent Size</SectionLabel>
+                  <Select 
+                    value={radialSize}
+                    onChange={(e) => setRadialSize(e.target.value)}
+                  >
+                    {radialSizeOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </Select>
                 </div>
               </div>
-            ) : (
-              <div className="space-y-6 p-4 bg-slate-800/30 rounded-xl border border-slate-800/50 animate-in fade-in slide-in-from-top-2 duration-300">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest block">Shape</label>
-                    <select 
-                      value={radialShape}
-                      onChange={(e) => setRadialShape(e.target.value as any)}
-                      className="w-full bg-slate-800 border-2 border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-blue-500 transition-colors"
-                    >
-                      <option value="circle">Círculo</option>
-                      <option value="ellipse">Elipse</option>
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest block">Extent Size</label>
-                    <select 
-                      value={radialSize}
-                      onChange={(e) => setRadialSize(e.target.value)}
-                      className="w-full bg-slate-800 border-2 border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-blue-500 transition-colors"
-                    >
-                      {radialSizeOptions.map(opt => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+
+              <div>
+                <SectionLabel>Position (at X Y)</SectionLabel>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
+                  <VisualPicker 
+                    ref={pickerRef}
+                    onMouseDown={handlePositionPick}
+                  >
+                    <div style={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px', pointerEvents: 'none' }}></div>
+                    <PickerHandle style={{ left: `${radialPosX}%`, top: `${radialPosY}%` }}>
+                      <Move size={12} color="white" />
+                    </PickerHandle>
+                  </VisualPicker>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.25rem' }}>
+                      {presets.map((p) => (
+                        <PresetButton
+                          key={p.label}
+                          onClick={() => { setRadialPosX(p.x); setRadialPosY(p.y); }}
+                          $active={radialPosX === p.x && radialPosY === p.y}
+                        >
+                          {p.label}
+                        </PresetButton>
                       ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-widest block">Position (at X Y)</label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                    {/* Visual Position Picker */}
-                    <div 
-                      ref={pickerRef}
-                      onMouseDown={handlePositionPick}
-                      className="aspect-square bg-slate-800 rounded-lg border-2 border-slate-700 relative cursor-crosshair overflow-hidden group shadow-inner"
-                    >
-                      <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-                      <div 
-                        className="absolute w-6 h-6 -ml-3 -mt-3 bg-blue-600 rounded-full border-2 border-white shadow-lg flex items-center justify-center pointer-events-none transition-all duration-75"
-                        style={{ left: `${radialPosX}%`, top: `${radialPosY}%` }}
-                      >
-                        <Move size={12} className="text-white" />
-                      </div>
-                    </div>
-
-                    <div className="space-y-5">
-                      <div className="grid grid-cols-3 gap-1">
-                        {presets.map((p) => (
-                          <button
-                            key={p.label}
-                            onClick={() => { setRadialPosX(p.x); setRadialPosY(p.y); }}
-                            className={`h-8 rounded text-[10px] font-bold border transition-all ${
-                              radialPosX === p.x && radialPosY === p.y 
-                                ? 'bg-blue-600 border-blue-500 text-white' 
-                                : 'bg-slate-800 border-slate-700 text-slate-500 hover:text-slate-300 hover:bg-slate-750'
-                            }`}
-                          >
-                            {p.label}
-                          </button>
-                        ))}
-                      </div>
-
-                      <div className="space-y-3">
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-[10px] text-slate-500 font-bold uppercase">
-                            <span>X Position</span>
-                            <span className="text-blue-400">{radialPosX}%</span>
-                          </div>
-                          <input 
-                            type="range" 
-                            min="0" 
-                            max="100" 
-                            value={radialPosX} 
-                            onChange={(e) => setRadialPosX(parseInt(e.target.value))}
-                            className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-[10px] text-slate-500 font-bold uppercase">
-                            <span>Y Position</span>
-                            <span className="text-blue-400">{radialPosY}%</span>
-                          </div>
-                          <input 
-                            type="range" 
-                            min="0" 
-                            max="100" 
-                            value={radialPosY} 
-                            onChange={(e) => setRadialPosY(parseInt(e.target.value))}
-                            className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                          />
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-bold text-slate-500 uppercase tracking-widest">Color Stops</label>
-                <button 
-                  onClick={addStop}
-                  disabled={stops.length >= 6}
-                  className="text-xs flex items-center gap-1 text-blue-400 hover:text-blue-300 disabled:opacity-30 transition-all font-bold"
-                >
-                  <Plus size={14} /> Adicionar
-                </button>
-              </div>
-              
-              <div className="space-y-3">
-                {stops.map((stop) => (
-                  <div key={stop.id} className="flex items-center gap-3 bg-slate-800/50 p-3 rounded-xl border border-slate-800 group hover:border-slate-700 transition-all">
-                    <input 
-                      type="color" 
-                      value={stop.color} 
-                      onChange={(e) => updateStop(stop.id, { color: e.target.value })}
-                      className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer p-0 overflow-hidden"
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <SectionLabel style={{ margin: 0 }}>Color Stops</SectionLabel>
+              <button 
+                onClick={addStop}
+                disabled={stops.length >= 6}
+                style={{ fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#60a5fa', fontWeight: 700, border: 'none', background: 'none', cursor: 'pointer', opacity: stops.length >= 6 ? 0.3 : 1 }}
+              >
+                <Plus size={14} /> Adicionar
+              </button>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {stops.map((stop) => (
+                <StopItem key={stop.id}>
+                  <ColorInput 
+                    type="color" 
+                    value={stop.color} 
+                    onChange={(e) => updateStop(stop.id, { color: e.target.value })}
+                  />
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.625rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                      <span>Position</span>
+                      <span style={{ color: '#3b82f6' }}>{stop.position}%</span>
+                    </div>
+                    <RangeInput 
+                      type="range" 
+                      min="0" 
+                      max="100" 
+                      value={stop.position} 
+                      onChange={(e) => updateStop(stop.id, { position: parseInt(e.target.value) })}
                     />
-                    <div className="flex-1 space-y-1">
-                      <div className="flex justify-between text-[10px] text-slate-500 uppercase font-bold px-1">
-                        <span>Position</span>
-                        <span className="text-blue-500">{stop.position}%</span>
-                      </div>
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="100" 
-                        value={stop.position} 
-                        onChange={(e) => updateStop(stop.id, { position: parseInt(e.target.value) })}
-                        className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-                      />
-                    </div>
-                    <button 
-                      onClick={() => removeStop(stop.id)}
-                      className="p-2 text-slate-600 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
-                    >
-                      <Trash2 size={16} />
-                    </button>
                   </div>
-                ))}
-              </div>
+                  <button 
+                    onClick={() => removeStop(stop.id)}
+                    style={{ padding: '0.5rem', color: '#475569', border: 'none', background: 'none', cursor: 'pointer', transition: 'color 0.2s' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#f87171'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </StopItem>
+              ))}
             </div>
           </div>
-        </div>
+        </ControlPanel>
 
-        <div className="flex flex-col gap-6">
-          <div className="flex-1 min-h-[350px] bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden relative group shadow-2xl">
-            <div 
-              className="absolute inset-0 transition-all duration-300"
-              style={{ background: gradientValue }}
-            ></div>
-            <div className="absolute inset-0 bg-slate-950/10 group-hover:bg-transparent transition-all pointer-events-none"></div>
-            <div className="absolute bottom-4 left-4 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-400 border border-slate-700 shadow-xl">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <PreviewBox>
+            <PreviewGradient $gradient={gradientValue} />
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(2, 6, 23, 0.1)', pointerEvents: 'none' }}></div>
+            <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', backgroundColor: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(12px)', padding: '0.375rem 0.75rem', borderRadius: '9999px', fontSize: '0.625rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#94a3b8', border: '1px solid rgba(51, 65, 85, 1)', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)' }}>
               Real-time Preview
             </div>
-          </div>
+          </PreviewBox>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex p-1 bg-slate-800 rounded-lg">
-                <button 
+          <CodeBlock>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+              <ToggleGroup>
+                <ToggleButton 
+                  $active={exportMode === 'property'} 
                   onClick={() => setExportMode('property')}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${exportMode === 'property' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-slate-300'}`}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                 >
                   <FileCode size={14} /> Propriedade
-                </button>
-                <button 
+                </ToggleButton>
+                <ToggleButton 
+                  $active={exportMode === 'class'} 
                   onClick={() => setExportMode('class')}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${exportMode === 'class' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:text-slate-300'}`}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                 >
                   <Box size={14} /> Classe CSS
-                </button>
-              </div>
+                </ToggleButton>
+              </ToggleGroup>
 
               <button 
                 onClick={copyToClipboard}
-                className="flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors bg-blue-500/10 px-3 py-1.5 rounded-lg border border-blue-500/20"
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', fontWeight: 700, color: '#60a5fa', backgroundColor: 'rgba(59, 130, 246, 0.1)', padding: '0.375rem 0.75rem', borderRadius: '0.5rem', border: '1px solid rgba(59, 130, 246, 0.2)', cursor: 'pointer', transition: 'all 0.2s' }}
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
                 {copied ? 'Copiado!' : 'Copiar'}
               </button>
             </div>
             
-            <div className="relative group">
-              <pre className="block bg-slate-950 p-4 rounded-lg text-blue-400 code-font text-sm border border-slate-800/50 leading-relaxed whitespace-pre-wrap break-all">
-                {exportMode === 'property' ? (
-                  <>
-                    <span className="text-slate-500">background:</span> {gradientValue};
-                  </>
-                ) : (
-                  <>
-                    <span className="text-purple-400">.gradient-preview</span> {'{\n'}
-                    {'  '}<span className="text-slate-500">width:</span> <span className="text-blue-200">100%</span>;{'\n'}
-                    {'  '}<span className="text-slate-500">height:</span> <span className="text-blue-200">300px</span>;{'\n'}
-                    {'  '}<span className="text-slate-500">border-radius:</span> <span className="text-blue-200">16px</span>;{'\n'}
-                    {'  '}<span className="text-slate-500">background:</span> {gradientValue};{'\n'}
-                    {'}'}
-                  </>
-                )}
-              </pre>
-            </div>
-          </div>
+            <CodePre>
+              {exportMode === 'property' ? (
+                <>
+                  <span style={{ color: '#64748b' }}>background:</span> {gradientValue};
+                </>
+              ) : (
+                <>
+                  <span style={{ color: '#c084fc' }}>.gradient-preview</span> {'{\n'}
+                  {'  '}<span style={{ color: '#64748b' }}>width:</span> <span style={{ color: '#bfdbfe' }}>100%</span>;{'\n'}
+                  {'  '}<span style={{ color: '#64748b' }}>height:</span> <span style={{ color: '#bfdbfe' }}>300px</span>;{'\n'}
+                  {'  '}<span style={{ color: '#64748b' }}>border-radius:</span> <span style={{ color: '#bfdbfe' }}>16px</span>;{'\n'}
+                  {'  '}<span style={{ color: '#64748b' }}>background:</span> {gradientValue};{'\n'}
+                  {'}'}
+                </>
+              )}
+            </CodePre>
+          </CodeBlock>
         </div>
-      </div>
-    </div>
+      </Grid>
+    </Container>
   );
 };
 
