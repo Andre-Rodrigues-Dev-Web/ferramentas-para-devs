@@ -1,8 +1,16 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, Github, Code, Globe, Layers, Sparkles } from 'lucide-react';
-import { Button } from '../../../shared/ui/Button';
-import MarketingLayout from './MarketingLayout';
+import * as React from "react";
+import { Link } from "react-router-dom";
+import {
+  ArrowRight,
+  Github,
+  Code,
+  Globe,
+  Layers,
+  Sparkles,
+} from "lucide-react";
+import { Button } from "../../../shared/ui/Button";
+import MarketingLayout from "./MarketingLayout";
+import { LaptopMockup } from "./LaptopMockup";
 
 import {
   ContentWrapper,
@@ -17,41 +25,58 @@ import {
   CardIcon,
   CardTitle,
   CardDescription,
-  DecorativeBgIcon
-} from './LandingPage.styles';
+  DecorativeBgIcon,
+} from "./LandingPage.styles";
 
 const LandingPage: React.FC = () => {
   return (
-    <MarketingLayout title="Home">
+    <MarketingLayout
+      title="Home"
+      description="DevToolkit é sua caixa de ferramentas essencial. Conversores, formatadores, e geradores de código para desenvolvedores web."
+      keywords="dev tools, json formatter, css generator, react, vite, developer productivity"
+    >
       <ContentWrapper>
         <HeroSection>
           <Badge>
             <span className="dot"></span>
             v2.0 Beta • Open Source
           </Badge>
-          
+
           <Title>
             DevToolkit <br />
-            <span className="gradient-text">Beyond Logic</span>
+            <span className="gradient-text">O Canivete Suíço Digital</span>
           </Title>
-          
+
           <Subtitle>
-            Uma suíte de ferramentas desenvolvida para a era da web moderna. 
-            Design fluído, performance instantânea e código aberto.
+            Ferramentas essenciais para desenvolvedores modernos. Design
+            premium, privacidade total e código aberto.
           </Subtitle>
-          
+
           <ButtonGroup>
             <Link to="/dashboard" style={{ zIndex: 10 }}>
-              <Button size="lg" className="h-14 px-8 text-lg hover:shadow-2xl hover:shadow-blue-500/20">
-                Explorar Ferramentas <ArrowRight size={20} className="ml-2" />
+              <Button
+                size="lg"
+                className="h-14 px-8 text-lg hover:shadow-2xl hover:shadow-blue-500/20"
+              >
+                Começar Agora <ArrowRight size={20} className="ml-2" />
               </Button>
             </Link>
-            <a href="https://github.com/Andre-Rodrigues-Dev-Web/ferramentas-para-devs" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="lg" className="h-14 px-8 text-lg bg-white/5 border-white/10 hover:bg-white/10 backdrop-blur-md">
+            <a
+              href="https://github.com/Andre-Rodrigues-Dev-Web/ferramentas-para-devs"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                variant="outline"
+                size="lg"
+                className="h-14 px-8 text-lg bg-white/5 border-white/10 hover:bg-white/10 backdrop-blur-md"
+              >
                 <Github size={20} className="mr-2" /> GitHub
               </Button>
             </a>
           </ButtonGroup>
+
+          <LaptopMockup />
         </HeroSection>
 
         <SectionTitle>
@@ -65,10 +90,10 @@ const LandingPage: React.FC = () => {
               <CardIcon>
                 <Code size={32} />
               </CardIcon>
-              <CardTitle>Developer First</CardTitle>
+              <CardTitle>Foco no Desenvolvedor</CardTitle>
               <CardDescription>
-                JSON Formatter, Validadores, Conversores e tudo que você precisa no dia a dia. 
-                Construído por devs, para devs, com foco total na usabilidade e sem distrações.
+                JSON Formatter, Validadores, Conversores e tudo que você precisa
+                para um workflow otimizado. Sem distrações.
               </CardDescription>
             </div>
             <DecorativeBgIcon className="icon-bg">
@@ -82,9 +107,10 @@ const LandingPage: React.FC = () => {
               <CardIcon>
                 <Sparkles size={32} />
               </CardIcon>
-              <CardTitle>UI Generators</CardTitle>
+              <CardTitle>Geradores de UI/UX</CardTitle>
               <CardDescription>
-                Crie Glassmorphism, Neumorphism e animações CSS complexas com cliques. Copie e cole.
+                Crie interfaces incríveis com geradores de CSS, Glassmorphism e
+                sombras modernas.
               </CardDescription>
             </div>
             <DecorativeBgIcon className="icon-bg">
@@ -98,9 +124,10 @@ const LandingPage: React.FC = () => {
               <CardIcon>
                 <Globe size={32} />
               </CardIcon>
-              <CardTitle>Network Tools</CardTitle>
+              <CardTitle>Diagnósticos de Rede</CardTitle>
               <CardDescription>
-                Analise DNS, verifique IPs e headers de requisição instantaneamente.
+                Verifique DNS, IPs e headers de requisição com rapidez e
+                precisão.
               </CardDescription>
             </div>
             <DecorativeBgIcon className="icon-bg">
@@ -110,14 +137,14 @@ const LandingPage: React.FC = () => {
 
           {/* Fourth Feature - Wide */}
           <BentoCard $span={2}>
-             <div className="relative z-10">
+            <div className="relative z-10">
               <CardIcon>
                 <Layers size={32} />
               </CardIcon>
-              <CardTitle>Modern Stack</CardTitle>
+              <CardTitle>Alta Performance</CardTitle>
               <CardDescription>
-                Totalmente construído com React, TypeScript e Vite. Arquitetura limpa e escalável.
-                Sinta a velocidade de uma Single Page Application otimizada.
+                Tecnologia de ponta com React e Vite. Uma experiência fluída e
+                instantânea.
               </CardDescription>
             </div>
             <DecorativeBgIcon className="icon-bg">
@@ -125,7 +152,6 @@ const LandingPage: React.FC = () => {
             </DecorativeBgIcon>
           </BentoCard>
         </BentoGrid>
-
       </ContentWrapper>
     </MarketingLayout>
   );

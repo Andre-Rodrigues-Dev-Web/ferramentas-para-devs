@@ -269,22 +269,20 @@ export const Footer = styled.footer`
 
 export const LiquidHeader = styled.nav`
   position: fixed;
-  top: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 50;
-  width: 90%;
-  max-width: 800px;
-  padding: 0.75rem 1.5rem;
+  width: 100%;
+  max-width: none;
+  padding: 1rem 2rem;
 
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(3, 7, 18, 0.8); // Darker background for full header
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 4px 30px rgba(0, 0, 0, 0.1),
-    inset 0 0 20px rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 
   display: flex;
   align-items: center;
