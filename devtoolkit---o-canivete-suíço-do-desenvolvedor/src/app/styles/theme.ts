@@ -9,7 +9,7 @@ export const theme: DefaultTheme = {
       300: "#93c5fd",
       400: "#60a5fa",
       500: "#3b82f6",
-      600: "#2563eb", // used often
+      600: "#2563eb",
       700: "#1d4ed8",
       800: "#1e40af",
       900: "#1e3a8a",
@@ -25,8 +25,8 @@ export const theme: DefaultTheme = {
       600: "#475569",
       700: "#334155",
       800: "#1e293b",
-      900: "#0f172a", // surface
-      950: "#020617", // background
+      900: "#0f172a",
+      950: "#020617",
     },
     white: "#ffffff",
     transparent: "transparent",

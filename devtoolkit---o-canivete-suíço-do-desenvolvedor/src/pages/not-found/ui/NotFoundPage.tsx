@@ -12,7 +12,7 @@ const float = keyframes`
 
 const Container = styled.div`
   min-height: 100vh;
-  background-color: #020617; // slate-950
+  background-color: #020617;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -64,7 +64,7 @@ const Title = styled.h2`
 `;
 
 const Description = styled.p`
-  color: #94a3b8; // slate-400
+  color: #94a3b8;
   font-size: 1.125rem;
   max-width: 500px;
   margin-bottom: 3rem;

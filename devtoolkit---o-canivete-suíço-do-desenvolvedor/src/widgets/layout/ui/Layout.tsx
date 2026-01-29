@@ -1,10 +1,9 @@
-
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import * as Icons from 'lucide-react'; // Fix: specific import would be better but keeping dynamic for now
-import { TOOLS, CATEGORIES } from '../../../entities/tool/model';
-import SearchModal from '../../search-modal/ui/SearchModal';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import * as Icons from "lucide-react";
+import { TOOLS, CATEGORIES } from "../../../entities/tool/model";
+import SearchModal from "../../search-modal/ui/SearchModal";
+import styled from "styled-components";
 
 const LayoutWrapper = styled.div`
   display: flex;
@@ -15,7 +14,7 @@ const LayoutWrapper = styled.div`
 `;
 
 const Sidebar = styled.aside<{ $isOpen: boolean }>`
-  width: ${({ $isOpen }) => ($isOpen ? '16rem' : '0')};
+  width: ${({ $isOpen }) => ($isOpen ? "16rem" : "0")};
   transition: all 300ms;
   background-color: ${({ theme }) => theme.colors.slate[900]};
   border-right: 1px solid ${({ theme }) => theme.colors.slate[800]};
@@ -83,7 +82,7 @@ const NavLink = styled(Link)<{ $isActive?: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
   transition: all 0.2s;
   font-size: 0.875rem;
-  
+
   ${({ $isActive, theme }) =>
     $isActive
       ? `
@@ -180,7 +179,7 @@ const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   padding: 0 1.5rem;
-  background-color: rgba(2, 6, 23, 0.5); /* slate-950/50 */
+  background-color: rgba(2, 6, 23, 0.5);
   backdrop-filter: blur(12px);
 `;
 
@@ -209,7 +208,7 @@ const HeaderLink = styled(Link)`
   &:hover {
     color: ${({ theme }) => theme.colors.primary[400]};
   }
-  
+
   span {
     display: none;
     @media (min-width: ${({ theme }) => theme.screens.sm}) {
@@ -241,10 +240,26 @@ const PulseDot = styled.span`
   border-radius: 9999px;
   background-color: #22c55e;
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  
+
   @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .5; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+`;
+
+const Separator = styled.div`
+  height: 2rem;
+  width: 1px;
+  background-color: ${({ theme }) => theme.colors.slate[800]};
+  display: none;
+
+  @media (min-width: ${({ theme }) => theme.screens.sm}) {
+    display: block;
   }
 `;
 
@@ -260,14 +275,18 @@ const Main = styled.main`
 `;
 
 const ContentContainer = styled.div`
-  max-width: 72rem; /* 6xl */
+  max-width: 72rem;
   margin: 0 auto;
   width: 100%;
   animation: fadeIn 0.5s ease-out;
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 `;
 
@@ -291,18 +310,22 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         setIsSearchOpen(true);
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const getIcon = (name: string) => {
     const IconComponent = (Icons as any)[name];
-    return IconComponent ? <IconComponent size={18} /> : <Icons.HelpCircle size={18} />;
+    return IconComponent ? (
+      <IconComponent size={18} />
+    ) : (
+      <Icons.HelpCircle size={18} />
+    );
   };
 
   return (
@@ -319,8 +342,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           {CATEGORIES.map((cat) => (
             <div key={cat}>
               <CategoryTitle>{cat}</CategoryTitle>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                {TOOLS.filter(t => t.category === cat).map(tool => {
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.25rem",
+                }}
+              >
+                {TOOLS.filter((t) => t.category === cat).map((tool) => {
                   const isActive = location.pathname === `/tool/${tool.slug}`;
                   return (
                     <NavLink
@@ -328,10 +357,18 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                       to={`/tool/${tool.slug}`}
                       $isActive={isActive}
                     >
-                      <span style={{ color: isActive ? '#60a5fa' : 'inherit' }}>
+                      <span style={{ color: isActive ? "#60a5fa" : "inherit" }}>
                         {getIcon(tool.icon)}
                       </span>
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tool.title}</span>
+                      <span
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {tool.title}
+                      </span>
                     </NavLink>
                   );
                 })}
@@ -342,20 +379,22 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
         <Footer>
           <SearchButton onClick={() => setIsSearchOpen(true)}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
               <Icons.Search size={16} />
               <span>Buscar...</span>
             </div>
             <Kbd>
-              <span style={{ fontSize: '0.75rem' }}>⌘</span>K
+              <span style={{ fontSize: "0.75rem" }}>⌘</span>K
             </Kbd>
           </SearchButton>
 
           <Credits>
-            Desenvolvido por <br/>
-            <a 
-              href="https://andrelaurentino.com.br" 
-              target="_blank" 
+            Desenvolvido por <br />
+            <a
+              href="https://andrelaurentino.com.br"
+              target="_blank"
               rel="noopener noreferrer"
             >
               André Laurentino Rodrigues
@@ -366,7 +405,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       <MainContainer>
         <Header>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <MenuButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
               <Icons.Menu size={20} />
             </MenuButton>
@@ -375,27 +414,28 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               <span>Dashboard</span>
             </HeaderLink>
           </div>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-             <GitHubLink href="https://github.com" target="_blank">
-               <Icons.Github size={20} />
-             </GitHubLink>
-             <div style={{ height: '2rem', width: '1px', backgroundColor: '#1e293b', display: 'none' }} className="sm:block"></div>
-             <VersionBadge>
-               <PulseDot />
-               V1.0.0 Stable
-             </VersionBadge>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <GitHubLink href="https://github.com" target="_blank">
+              <Icons.Github size={20} />
+            </GitHubLink>
+            <Separator />
+            <VersionBadge>
+              <PulseDot />
+              V1.0.0 Stable
+            </VersionBadge>
           </div>
         </Header>
 
         <Main>
-          <ContentContainer>
-            {children}
-          </ContentContainer>
+          <ContentContainer>{children}</ContentContainer>
         </Main>
       </MainContainer>
 
-      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </LayoutWrapper>
   );
 };

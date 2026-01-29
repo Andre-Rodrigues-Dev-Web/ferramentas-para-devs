@@ -94,11 +94,10 @@ const ToolCard = styled(Link)`
 
   &:hover {
     transform: translateY(-0.25rem);
-    border-color: rgba(59, 130, 246, 0.5); /* blue-500/50 */
-    box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.05); /* blue-500/5 */
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.05);
   }
 
-  /* Group hover implementation for children */
   &:hover h3 {
     color: ${({ theme }) => theme.colors.primary[400]};
   }
@@ -210,7 +209,6 @@ const Dashboard: React.FC = () => {
         </Description>
       </Header>
 
-      {/* Categories Filter */}
       <CategoryFilter>
         <CategoryButton
           onClick={() => setActiveCategory("Tudo")}
@@ -229,7 +227,6 @@ const Dashboard: React.FC = () => {
         ))}
       </CategoryFilter>
 
-      {/* Tools Grid */}
       <Grid>
         {filteredTools.map((tool) => (
           <ToolCard key={tool.id} to={`/tool/${tool.slug}`}>
@@ -245,7 +242,7 @@ const Dashboard: React.FC = () => {
               <CategoryLabel>{tool.category}</CategoryLabel>
               <Icons.ArrowRight
                 size={16}
-                className="arrow-icon" // Targeted by ToolCard:hover
+                className="arrow-icon"
                 style={{ transition: "all 0.2s", color: "#475569" }}
               />
             </ToolFooter>

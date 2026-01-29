@@ -4,6 +4,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  padding-bottom: 2.5rem;
 `;
 
 export const Header = styled.div`
@@ -86,6 +87,61 @@ export const ToggleButton = styled.button<{ $active: boolean }>`
         `}
 `;
 
+export const SettingsCard = styled.div`
+  padding: 1rem;
+  background-color: rgba(30, 41, 59, 0.3);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(30, 41, 59, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Added gap for radial items */
+`;
+
+export const SettingsHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+
+  span:first-child {
+    color: #94a3b8;
+    font-weight: 500;
+  }
+
+  span:last-child {
+    color: #60a5fa;
+    font-weight: 700;
+  }
+`;
+
+export const AngleLabels = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.625rem;
+  color: #475569;
+  font-weight: 700;
+  padding: 0 0.25rem;
+  margin-top: 0.25rem;
+`;
+
+export const ShapeGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+`;
+
+export const PositionContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+`;
+
+export const PresetsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+`;
+
 export const RangeInput = styled.input`
   width: 100%;
   height: 0.375rem;
@@ -148,6 +204,36 @@ export const PickerHandle = styled.div`
   transition: all 0.075s;
 `;
 
+export const StopsHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+`;
+
+export const AddStopButton = styled.button`
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #60a5fa;
+  font-weight: 700;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+`;
+
+export const StopList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+`;
+
 export const StopItem = styled.div`
   display: flex;
   align-items: center;
@@ -174,6 +260,45 @@ export const ColorInput = styled.input`
   overflow: hidden;
 `;
 
+export const StopControls = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+`;
+
+export const StopLabel = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+
+  span:last-child {
+    color: #3b82f6;
+  }
+`;
+
+export const RemoveStopButton = styled.button`
+  padding: 0.5rem;
+  color: #475569;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #f87171;
+  }
+`;
+
+export const PreviewColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
 export const PreviewBox = styled.div`
   flex: 1;
   min-height: 350px;
@@ -192,12 +317,51 @@ export const PreviewGradient = styled.div<{ $gradient: string }>`
   background: ${({ $gradient }) => $gradient};
 `;
 
+export const LiveBadge = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background-color: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(12px);
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  border: 1px solid rgba(51, 65, 85, 1);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+`;
+
 export const CodeBlock = styled.div`
   background-color: ${({ theme }) => theme.colors.slate[900]};
   border: 1px solid ${({ theme }) => theme.colors.slate[800]};
   border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
   padding: 1.5rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+`;
+
+export const CodeHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+`;
+
+export const CopyCodeButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #60a5fa;
+  background-color: rgba(59, 130, 246, 0.1);
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  cursor: pointer;
+  transition: all 0.2s;
 `;
 
 export const CodePre = styled.pre`
@@ -229,9 +393,7 @@ export const PresetButton = styled.button<{ $active?: boolean }>`
 
   &:hover {
     background-color: ${({ theme, $active }) =>
-      $active
-        ? theme.colors.primary[600]
-        : theme.colors.slate[700]}; // slate-750 roughly
+      $active ? theme.colors.primary[600] : theme.colors.slate[700]};
     color: ${({ theme, $active }) =>
       $active ? theme.colors.white : theme.colors.slate[300]};
   }

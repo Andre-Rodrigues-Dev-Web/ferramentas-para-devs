@@ -1,11 +1,50 @@
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { Wind, Play, Copy, Check, RefreshCw, Zap } from "lucide-react";
+import { Button } from "../../shared/ui/Button";
 
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { Wind, Play, Copy, Check, RefreshCw, Zap } from 'lucide-react';
-import { Button } from '../../shared/ui/Button';
+import { CATEGORIES } from "./AnimistaGenerator.data";
+import type { AnimationCategory, AnimationDef } from "./AnimistaGenerator.data";
 
-import { CATEGORIES } from './AnimistaGenerator.data';
-import type { AnimationCategory, AnimationDef } from './AnimistaGenerator.data';
+import {
+  Container,
+  Header,
+  HeaderContent,
+  IconWrapper,
+  TitleContainer,
+  Title,
+  Description,
+  GridLayout,
+  Sidebar,
+  ConfigBox,
+  SectionTitle,
+  ListContainer,
+  CategoryButton,
+  AnimationButton,
+  MainContent,
+  PreviewBox,
+  PreviewBackground,
+  AnimatedElement,
+  PreviewControls,
+  PreviewLabel,
+  ReplayButton,
+  ControlsGrid,
+  ControlGroup,
+  ControlHeader,
+  ControlValue,
+  RangeInput,
+  SelectInput,
+  OutputColumn,
+  CodeCard,
+  CodeHeader,
+  CopyButton,
+  CodeSection,
+  CodeLabel,
+  CodeBlock,
+  KeyframesBlock,
+  TipBox,
+  TipContent,
+} from "./styles/AnimistaGenerator.styles";
 
 const AnimistaGenerator: React.FC = () => {
   const [selectedCat, setSelectedCat] = useState(CATEGORIES[0]);
@@ -13,8 +52,8 @@ const AnimistaGenerator: React.FC = () => {
   const [duration, setDuration] = useState(0.4);
   const [delay, setDelay] = useState(0);
   const [iterations, setIterations] = useState(1);
-  const [timing, setTiming] = useState('ease');
-  const [direction, setDirection] = useState('normal');
+  const [timing, setTiming] = useState("ease");
+  const [direction, setDirection] = useState("normal");
   const [isAnimating, setIsAnimating] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -32,14 +71,14 @@ const AnimistaGenerator: React.FC = () => {
     animationName: selectedAnim.className,
     animationDuration: `${duration}s`,
     animationDelay: `${delay}s`,
-    animationIterationCount: iterations === 0 ? 'infinite' : iterations,
+    animationIterationCount: iterations === 0 ? "infinite" : iterations,
     animationTimingFunction: timing,
     animationDirection: direction,
-    animationFillMode: 'both'
+    animationFillMode: "both",
   };
 
   const cssClassCode = `.${selectedAnim.className} {
-  animation: ${selectedAnim.className} ${duration}s ${timing} ${delay}s ${iterations === 0 ? 'infinite' : iterations} ${direction} both;
+  animation: ${selectedAnim.className} ${duration}s ${timing} ${delay}s ${iterations === 0 ? "infinite" : iterations} ${direction} both;
 }`;
 
   const fullCssCode = `${cssClassCode}\n\n${selectedAnim.keyframes}`;
@@ -51,160 +90,184 @@ const AnimistaGenerator: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-10">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-blue-600/10 text-blue-500 rounded-2xl">
+    <Container>
+      <Header>
+        <HeaderContent>
+          <IconWrapper>
             <Wind size={32} />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-white">Animista - CSS Animations</h1>
-            <p className="text-slate-400">Descubra e configure animações CSS performáticas para seus elementos.</p>
-          </div>
-        </div>
+          </IconWrapper>
+          <TitleContainer>
+            <Title>Animista - CSS Animations</Title>
+            <Description>
+              Descubra e configure animações CSS performáticas para seus
+              elementos.
+            </Description>
+          </TitleContainer>
+        </HeaderContent>
         <Button variant="outline" onClick={replay}>
           <Play size={16} className="mr-2" /> Play
         </Button>
-      </div>
+      </Header>
 
       {/* Inject Keyframes into DOM */}
       <style>{selectedAnim.keyframes}</style>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <GridLayout>
         {/* Categories Sidebar */}
-        <div className="lg:col-span-3 space-y-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest px-2 mb-4">Categorias</h3>
-            <div className="space-y-1">
-              {CATEGORIES.map(cat => (
-                <button
+        <Sidebar>
+          <ConfigBox>
+            <SectionTitle>Categorias</SectionTitle>
+            <ListContainer>
+              {CATEGORIES.map((cat) => (
+                <CategoryButton
                   key={cat.id}
                   onClick={() => {
                     setSelectedCat(cat);
                     setSelectedAnim(cat.animations[0]);
                   }}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
-                    selectedCat.id === cat.id ? 'bg-blue-600/10 text-blue-400' : 'text-slate-400 hover:bg-slate-800'
-                  }`}
+                  $isActive={selectedCat.id === cat.id}
                 >
                   {cat.name}
-                </button>
+                </CategoryButton>
               ))}
-            </div>
-          </div>
+            </ListContainer>
+          </ConfigBox>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest px-2 mb-4">Animações</h3>
-            <div className="grid grid-cols-1 gap-1">
-              {selectedCat.animations.map(anim => (
-                <button
+          <ConfigBox>
+            <SectionTitle>Animações</SectionTitle>
+            <ListContainer>
+              {selectedCat.animations.map((anim) => (
+                <AnimationButton
                   key={anim.className}
                   onClick={() => setSelectedAnim(anim)}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-xs transition-all ${
-                    selectedAnim.className === anim.className ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800'
-                  }`}
+                  $isActive={selectedAnim.className === anim.className}
                 >
                   {anim.name}
-                </button>
+                </AnimationButton>
               ))}
-            </div>
-          </div>
-        </div>
+            </ListContainer>
+          </ConfigBox>
+        </Sidebar>
 
         {/* Main Preview & Controls */}
-        <div className="lg:col-span-6 space-y-6">
-          <div className="aspect-video bg-slate-900 border border-slate-800 rounded-3xl flex items-center justify-center overflow-hidden relative shadow-2xl">
-            <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
-            
-            <div 
-              className="w-24 h-24 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-xl shadow-blue-500/20"
-              style={isAnimating ? animationStyle : {}}
-            ></div>
+        <MainContent>
+          <PreviewBox>
+            <PreviewBackground />
 
-            <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center px-4">
-               <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Preview: {selectedAnim.name}</span>
-               <button onClick={replay} className="p-2 bg-slate-800 rounded-full text-slate-400 hover:text-white transition-all">
-                 <RefreshCw size={14} />
-               </button>
-            </div>
-          </div>
+            <AnimatedElement style={isAnimating ? animationStyle : {}} />
 
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-             <div className="space-y-2">
-                <div className="flex justify-between text-[11px] font-bold text-slate-500 uppercase">
-                  <span>Duração</span>
-                  <span className="text-blue-400">{duration}s</span>
-                </div>
-                <input type="range" min="0.1" max="5" step="0.1" value={duration} onChange={e => setDuration(parseFloat(e.target.value))} className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-             </div>
-             <div className="space-y-2">
-                <div className="flex justify-between text-[11px] font-bold text-slate-500 uppercase">
-                  <span>Delay</span>
-                  <span className="text-blue-400">{delay}s</span>
-                </div>
-                <input type="range" min="0" max="5" step="0.1" value={delay} onChange={e => setDelay(parseFloat(e.target.value))} className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-             </div>
-             <div className="space-y-2">
-                <label className="text-[11px] font-bold text-slate-500 uppercase mb-1 block">Timing Function</label>
-                <select value={timing} onChange={e => setTiming(e.target.value)} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-blue-500">
-                  <option value="ease">Ease</option>
-                  <option value="linear">Linear</option>
-                  <option value="ease-in">Ease In</option>
-                  <option value="ease-out">Ease Out</option>
-                  <option value="ease-in-out">Ease In Out</option>
-                  <option value="cubic-bezier(0.68, -0.55, 0.27, 1.55)">Back</option>
-                </select>
-             </div>
-             <div className="space-y-2">
-                <label className="text-[11px] font-bold text-slate-500 uppercase mb-1 block">iterações</label>
-                <select value={iterations} onChange={e => setIterations(parseInt(e.target.value))} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-blue-500">
-                  <option value="1">1 vez</option>
-                  <option value="2">2 vezes</option>
-                  <option value="3">3 vezes</option>
-                  <option value="0">Infinito</option>
-                </select>
-             </div>
-          </div>
-        </div>
+            <PreviewControls>
+              <PreviewLabel>Preview: {selectedAnim.name}</PreviewLabel>
+              <ReplayButton onClick={replay}>
+                <RefreshCw size={14} />
+              </ReplayButton>
+            </PreviewControls>
+          </PreviewBox>
+
+          <ControlsGrid>
+            <ControlGroup>
+              <ControlHeader>
+                <span>Duração</span>
+                <ControlValue>{duration}s</ControlValue>
+              </ControlHeader>
+              <RangeInput
+                type="range"
+                min="0.1"
+                max="5"
+                step="0.1"
+                value={duration}
+                onChange={(e) => setDuration(parseFloat(e.target.value))}
+              />
+            </ControlGroup>
+            <ControlGroup>
+              <ControlHeader>
+                <span>Delay</span>
+                <ControlValue>{delay}s</ControlValue>
+              </ControlHeader>
+              <RangeInput
+                type="range"
+                min="0"
+                max="5"
+                step="0.1"
+                value={delay}
+                onChange={(e) => setDelay(parseFloat(e.target.value))}
+              />
+            </ControlGroup>
+            <ControlGroup>
+              <ControlHeader>
+                <span style={{ marginBottom: "0.25rem", display: "block" }}>
+                  Timing Function
+                </span>
+              </ControlHeader>
+              <SelectInput
+                value={timing}
+                onChange={(e) => setTiming(e.target.value)}
+              >
+                <option value="ease">Ease</option>
+                <option value="linear">Linear</option>
+                <option value="ease-in">Ease In</option>
+                <option value="ease-out">Ease Out</option>
+                <option value="ease-in-out">Ease In Out</option>
+                <option value="cubic-bezier(0.68, -0.55, 0.27, 1.55)">
+                  Back
+                </option>
+              </SelectInput>
+            </ControlGroup>
+            <ControlGroup>
+              <ControlHeader>
+                <span style={{ marginBottom: "0.25rem", display: "block" }}>
+                  iterações
+                </span>
+              </ControlHeader>
+              <SelectInput
+                value={iterations}
+                onChange={(e) => setIterations(parseInt(e.target.value))}
+              >
+                <option value="1">1 vez</option>
+                <option value="2">2 vezes</option>
+                <option value="3">3 vezes</option>
+                <option value="0">Infinito</option>
+              </SelectInput>
+            </ControlGroup>
+          </ControlsGrid>
+        </MainContent>
 
         {/* Code Output Sidebar */}
-        <div className="lg:col-span-3 space-y-6">
-           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Código CSS</h3>
-              <button 
-                onClick={copyToClipboard}
-                className="flex items-center gap-2 text-[10px] font-bold text-blue-400 hover:text-blue-300 transition-colors bg-blue-500/10 px-2 py-1 rounded border border-blue-500/20"
-              >
+        <OutputColumn>
+          <CodeCard>
+            <CodeHeader>
+              <SectionTitle style={{ marginBottom: 0, padding: 0 }}>
+                Código CSS
+              </SectionTitle>
+              <CopyButton onClick={copyToClipboard}>
                 {copied ? <Check size={12} /> : <Copy size={12} />}
-                {copied ? 'Copiado!' : 'Copiar'}
-              </button>
+                {copied ? "Copiado!" : "Copiar"}
+              </CopyButton>
+            </CodeHeader>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+            >
+              <CodeSection>
+                <CodeLabel>Classe</CodeLabel>
+                <CodeBlock>{cssClassCode}</CodeBlock>
+              </CodeSection>
+              <CodeSection>
+                <CodeLabel>Keyframes</CodeLabel>
+                <KeyframesBlock>{selectedAnim.keyframes}</KeyframesBlock>
+              </CodeSection>
             </div>
-            <div className="space-y-4">
-              <div className="space-y-1.5">
-                <span className="text-[10px] text-slate-600 font-bold uppercase">Classe</span>
-                <code className="block bg-slate-950 p-3 rounded-lg text-blue-400 code-font text-[11px] break-all border border-slate-800/50">
-                  {cssClassCode}
-                </code>
-              </div>
-              <div className="space-y-1.5">
-                <span className="text-[10px] text-slate-600 font-bold uppercase">Keyframes</span>
-                <code className="block bg-slate-950 p-3 rounded-lg text-purple-400 code-font text-[11px] break-all border border-slate-800/50 max-h-[300px] overflow-y-auto">
-                  {selectedAnim.keyframes}
-                </code>
-              </div>
-            </div>
-          </div>
+          </CodeCard>
 
-          <div className="p-4 bg-blue-600/5 border border-blue-500/20 rounded-2xl flex gap-3 text-[11px] leading-relaxed">
-             <Zap size={16} className="text-blue-500 flex-shrink-0" />
-             <p className="text-slate-400">
-               <strong className="text-slate-200">Dica:</strong> Para melhor performance, use animações que manipulem apenas <code className="text-blue-400">transform</code> e <code className="text-blue-400">opacity</code>.
-             </p>
-          </div>
-        </div>
-      </div>
-    </div>
+          <TipBox>
+            <Zap size={16} color="#3b82f6" style={{ flexShrink: 0 }} />
+            <TipContent>
+              <strong>Dica:</strong> Para melhor performance, use animações que
+              manipulem apenas <code>transform</code> e <code>opacity</code>.
+            </TipContent>
+          </TipBox>
+        </OutputColumn>
+      </GridLayout>
+    </Container>
   );
 };
 

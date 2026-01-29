@@ -25,7 +25,7 @@ const Overlay = styled.div`
 const Backdrop = styled.div`
   position: fixed;
   inset: 0;
-  background-color: rgba(2, 6, 23, 0.8); /* slate-950/80 */
+  background-color: rgba(2, 6, 23, 0.8);
   backdrop-filter: blur(4px);
   cursor: default;
 `;
@@ -33,7 +33,7 @@ const Backdrop = styled.div`
 const ModalContent = styled.div`
   position: relative;
   width: 100%;
-  max-width: 36rem; /* max-w-xl */
+  max-width: 36rem;
   background-color: ${({ theme }) => theme.colors.slate[900]};
   border: 1px solid ${({ theme }) => theme.colors.slate[700]};
   border-radius: ${({ theme }) => theme.borderRadius.xl};

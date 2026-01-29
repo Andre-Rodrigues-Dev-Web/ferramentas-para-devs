@@ -86,6 +86,10 @@ const CarbonCodeTool = lazy(() => import("../pages/tools/CarbonCodeTool"));
 const BoilerplateGenerator = lazy(
   () => import("../pages/tools/BoilerplateGenerator"),
 );
+const SqlToNoSqlConverter = lazy(
+  () => import("../pages/tools/SqlToNoSqlConverter"),
+);
+const CodeConverter = lazy(() => import("../pages/tools/CodeConverter"));
 
 // Loading Component
 import { LoadingPage } from "../shared/ui/Loading/LoadingPage";
@@ -266,6 +270,14 @@ const App: React.FC = () => {
                         <Route
                           path="/tool/project-boilerplates"
                           element={<BoilerplateGenerator />}
+                        />
+                        <Route
+                          path="/tool/sql-to-nosql"
+                          element={<SqlToNoSqlConverter />}
+                        />
+                        <Route
+                          path="/tool/code-converter"
+                          element={<CodeConverter />}
                         />
 
                         {/* Dynamic Placeholder Routes */}

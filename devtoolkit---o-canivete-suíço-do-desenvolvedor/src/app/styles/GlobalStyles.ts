@@ -16,7 +16,7 @@ export const GlobalStyles = createGlobalStyle`
 
   body {
     font-family: 'Inter', sans-serif;
-    background-color: ${({ theme }) => theme.colors.slate[950]};
+    background-color: #0D0D0D;
     color: ${({ theme }) => theme.colors.slate[200]};
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;

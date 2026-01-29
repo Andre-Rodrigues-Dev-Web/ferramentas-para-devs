@@ -20,7 +20,7 @@ import {
   CopyButton,
   ResultBox,
   Placeholder
-} from './Base64Converter.styles';
+} from './styles/Base64Converter.styles';
 
 const Base64Converter: FC = () => {
   const [input, setInput] = useState('');

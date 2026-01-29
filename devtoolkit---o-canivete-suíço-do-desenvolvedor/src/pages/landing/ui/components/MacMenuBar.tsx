@@ -7,7 +7,13 @@ import {
   FaUserCircle,
   FaSlidersH,
 } from "react-icons/fa";
-import { MenuBar } from "../LaptopMockup.styles";
+import {
+  MenuBar,
+  MenuBarLeft,
+  MenuBarRight,
+  MenuBarIconGroup,
+  MenuBarItem,
+} from "../LaptopMockup.styles";
 
 export const MacMenuBar: React.FC = () => {
   const [time, setTime] = React.useState(new Date());
@@ -29,25 +35,25 @@ export const MacMenuBar: React.FC = () => {
 
   return (
     <MenuBar>
-      <div className="left">
+      <MenuBarLeft>
         <FaApple />
-        <span>File</span>
-        <span>Edit</span>
-        <span>View</span>
-        <span>Window</span>
-        <span>Help</span>
-      </div>
-      <div className="right">
-        <div className="icon-group">
+        <MenuBarItem>File</MenuBarItem>
+        <MenuBarItem>Edit</MenuBarItem>
+        <MenuBarItem>View</MenuBarItem>
+        <MenuBarItem>Window</MenuBarItem>
+        <MenuBarItem>Help</MenuBarItem>
+      </MenuBarLeft>
+      <MenuBarRight>
+        <MenuBarIconGroup>
           <FaBatteryFull />
           <FaWifi />
           <FaSearch />
           <FaSlidersH style={{ fontSize: "0.7rem" }} />
           <span style={{ fontWeight: 400 }}>{dateStr}</span>
           <span style={{ fontWeight: 400 }}>{timeStr}</span>
-        </div>
+        </MenuBarIconGroup>
         <FaUserCircle style={{ fontSize: "1.2rem", opacity: 0.8 }} />
-      </div>
+      </MenuBarRight>
     </MenuBar>
   );
 };
