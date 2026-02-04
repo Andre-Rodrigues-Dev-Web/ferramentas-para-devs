@@ -15,7 +15,7 @@ export interface Tool {
   title: string;
   slug: string;
   category: Category;
-  icon: string; // Icon name from Lucide
+  icon: string;
   description: string;
   isImplemented?: boolean;
 }

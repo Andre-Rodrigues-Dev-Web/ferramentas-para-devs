@@ -1,8 +1,58 @@
-
-import React, { useState, useMemo } from 'react';
-import { Cpu, Copy, Check, Download, Shield, Zap, Info, Server, Globe, FileCode } from 'lucide-react';
-import { Button } from '../../shared/ui/Button';
-import { Input } from '../../shared/ui/Input';
+import React, { useState, useMemo } from "react";
+import {
+  Cpu,
+  Copy,
+  Check,
+  Download,
+  Shield,
+  Zap,
+  Info,
+  Server,
+  Globe,
+  FileCode,
+} from "lucide-react";
+import { Button } from "../../shared/ui/Button";
+import { Input } from "../../shared/ui/Input";
+import {
+  Container,
+  Header,
+  HeaderContent,
+  IconWrapper,
+  TitleContainer,
+  Title,
+  Description,
+  Actions,
+  Grid,
+  ConfigSection,
+  ConfigCard,
+  SectionHeader,
+  SectionTitle,
+  FormSpace,
+  ToggleCard,
+  ToggleContent,
+  ToggleLabel,
+  ToggleDescription,
+  ToggleSwitch,
+  ToggleKnob,
+  SecurityGrid,
+  InfoBox,
+  PreviewSection,
+  PreviewCard,
+  PreviewHeader,
+  PreviewTitle,
+  PreviewBadge,
+  PreviewContent,
+  CodeBlock,
+  GlowEffect,
+  PreviewFooter,
+  FooterText,
+  StatusIndicator,
+  StatusDot,
+  ToggleItemContainer,
+  SimpleToggleLabel,
+  SimpleToggleSwitch,
+  SimpleToggleKnob,
+} from "./styles/NginxConfigTool.styles";
 
 interface NginxConfig {
   domain: string;
@@ -20,9 +70,9 @@ interface NginxConfig {
 
 const NginxConfigTool: React.FC = () => {
   const [config, setConfig] = useState<NginxConfig>({
-    domain: 'example.com',
-    rootPath: '/var/www/example',
-    proxyPass: 'http://localhost:3000',
+    domain: "example.com",
+    rootPath: "/var/www/example",
+    proxyPass: "http://localhost:3000",
     isProxy: false,
     useSsl: true,
     useGzip: true,
@@ -38,7 +88,7 @@ const NginxConfigTool: React.FC = () => {
   const generatedConfig = useMemo(() => {
     let output = `server {\n`;
     output += `    listen 80;\n`;
-    output += `    server_name ${config.domain}${config.wwwRedirect ? ` www.${config.domain}` : ''};\n\n`;
+    output += `    server_name ${config.domain}${config.wwwRedirect ? ` www.${config.domain}` : ""};\n\n`;
 
     if (config.useSsl) {
       output += `    # Redirect HTTP to HTTPS\n`;
@@ -46,7 +96,7 @@ const NginxConfigTool: React.FC = () => {
       output += `}\n\n`;
       output += `server {\n`;
       output += `    listen 443 ssl http2;\n`;
-      output += `    server_name ${config.domain}${config.wwwRedirect ? ` www.${config.domain}` : ''};\n\n`;
+      output += `    server_name ${config.domain}${config.wwwRedirect ? ` www.${config.domain}` : ""};\n\n`;
       output += `    ssl_certificate /etc/letsencrypt/live/${config.domain}/fullchain.pem;\n`;
       output += `    ssl_certificate_key /etc/letsencrypt/live/${config.domain}/privkey.pem;\n\n`;
     }
@@ -62,8 +112,10 @@ const NginxConfigTool: React.FC = () => {
       output += `    add_header X-Content-Type-Options "nosniff";\n\n`;
     }
 
-    if (config.accessLog) output += `    access_log /var/log/nginx/${config.domain}.access.log;\n`;
-    if (config.errorLog) output += `    error_log /var/log/nginx/${config.domain}.error.log;\n\n`;
+    if (config.accessLog)
+      output += `    access_log /var/log/nginx/${config.domain}.access.log;\n`;
+    if (config.errorLog)
+      output += `    error_log /var/log/nginx/${config.domain}.error.log;\n\n`;
 
     if (config.isProxy) {
       output += `    location / {\n`;
@@ -76,7 +128,7 @@ const NginxConfigTool: React.FC = () => {
       output += `    }\n`;
     } else {
       output += `    root ${config.rootPath};\n`;
-      output += `    index index.html index.htm${config.phpSupport ? ' index.php' : ''};\n\n`;
+      output += `    index index.html index.htm${config.phpSupport ? " index.php" : ""};\n\n`;
       output += `    location / {\n`;
       output += `        try_files $uri $uri/ /index.html;\n`;
       output += `    }\n`;
@@ -100,9 +152,9 @@ const NginxConfigTool: React.FC = () => {
   };
 
   const downloadConfig = () => {
-    const blob = new Blob([generatedConfig], { type: 'text/plain' });
+    const blob = new Blob([generatedConfig], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `${config.domain}.conf`;
     a.click();
@@ -110,145 +162,223 @@ const NginxConfigTool: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-10">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-emerald-600/10 text-emerald-500 rounded-2xl">
+    <Container>
+      <Header>
+        <HeaderContent>
+          <IconWrapper>
             <Cpu size={32} />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-white">Nginx Config Generator</h1>
-            <p className="text-slate-400">Gere arquivos de configuração robustos para seus servidores Nginx.</p>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={downloadConfig} disabled={!config.domain}>
-            <Download size={16} className="mr-2" /> Baixar .conf
+          </IconWrapper>
+          <TitleContainer>
+            <Title>Nginx Config Generator</Title>
+            <Description>
+              Gere arquivos de configuração robustos para seus servidores Nginx.
+            </Description>
+          </TitleContainer>
+        </HeaderContent>
+        <Actions>
+          <Button
+            variant="outline"
+            onClick={downloadConfig}
+            disabled={!config.domain}
+          >
+            <Download size={16} style={{ marginRight: "0.5rem" }} /> Baixar
+            .conf
           </Button>
-          <Button onClick={copyToClipboard} disabled={!config.domain} className="bg-emerald-600 hover:bg-emerald-700">
-            {copied ? <Check size={16} className="mr-2" /> : <Copy size={16} className="mr-2" />}
-            {copied ? 'Copiado' : 'Copiar Config'}
+          <Button
+            onClick={copyToClipboard}
+            disabled={!config.domain}
+            style={{ backgroundColor: "#059669" }}
+          >
+            {copied ? (
+              <Check size={16} style={{ marginRight: "0.5rem" }} />
+            ) : (
+              <Copy size={16} style={{ marginRight: "0.5rem" }} />
+            )}
+            {copied ? "Copiado" : "Copiar Config"}
           </Button>
-        </div>
-      </div>
+        </Actions>
+      </Header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <Grid>
         {/* Left: Configuration Form */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-[2rem] p-6 space-y-6 shadow-xl">
-            <div className="flex items-center gap-2 border-b border-slate-800 pb-4">
-               <Server size={18} className="text-emerald-500" />
-               <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Servidor & Domínio</h3>
-            </div>
+        <ConfigSection>
+          <ConfigCard>
+            <SectionHeader>
+              <Server size={18} style={{ color: "#10b981" }} />
+              <SectionTitle>Servidor & Domínio</SectionTitle>
+            </SectionHeader>
 
-            <div className="space-y-4">
-               <Input 
-                label="Domínio Principal" 
-                value={config.domain} 
-                onChange={(e) => setConfig({...config, domain: e.target.value})}
+            <FormSpace>
+              <Input
+                label="Domínio Principal"
+                value={config.domain}
+                onChange={(e) =>
+                  setConfig({ ...config, domain: e.target.value })
+                }
                 placeholder="exemplo.com"
-               />
+              />
 
-               <div className="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800 hover:border-emerald-500/30 transition-all cursor-pointer" onClick={() => setConfig({...config, isProxy: !config.isProxy})}>
-                  <div className="space-y-0.5">
-                     <p className="text-sm font-bold text-white">Reverse Proxy</p>
-                     <p className="text-[10px] text-slate-500 uppercase">Redirecionar para um app (Node, Go, Python...)</p>
-                  </div>
-                  <div className={`w-10 h-5 rounded-full transition-colors relative ${config.isProxy ? 'bg-emerald-600' : 'bg-slate-800'}`}>
-                     <div className={`absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform ${config.isProxy ? 'translate-x-5' : ''}`}></div>
-                  </div>
-               </div>
+              <ToggleCard
+                onClick={() =>
+                  setConfig({ ...config, isProxy: !config.isProxy })
+                }
+              >
+                <ToggleContent>
+                  <ToggleLabel>Reverse Proxy</ToggleLabel>
+                  <ToggleDescription>
+                    Redirecionar para um app (Node, Go, Python...)
+                  </ToggleDescription>
+                </ToggleContent>
+                <ToggleSwitch $checked={config.isProxy}>
+                  <ToggleKnob $checked={config.isProxy} />
+                </ToggleSwitch>
+              </ToggleCard>
 
-               {config.isProxy ? (
-                  <Input 
-                    label="Proxy Pass (Backend URL)" 
-                    value={config.proxyPass} 
-                    onChange={(e) => setConfig({...config, proxyPass: e.target.value})}
-                    placeholder="http://localhost:3000"
+              {config.isProxy ? (
+                <Input
+                  label="Proxy Pass (Backend URL)"
+                  value={config.proxyPass}
+                  onChange={(e) =>
+                    setConfig({ ...config, proxyPass: e.target.value })
+                  }
+                  placeholder="http://localhost:3000"
+                />
+              ) : (
+                <>
+                  <Input
+                    label="Caminho Root"
+                    value={config.rootPath}
+                    onChange={(e) =>
+                      setConfig({ ...config, rootPath: e.target.value })
+                    }
+                    placeholder="/var/www/html"
                   />
-               ) : (
-                  <>
-                    <Input 
-                      label="Caminho Root" 
-                      value={config.rootPath} 
-                      onChange={(e) => setConfig({...config, rootPath: e.target.value})}
-                      placeholder="/var/www/html"
-                    />
-                    <ToggleItem label="Suporte PHP-FPM" checked={config.phpSupport} onChange={(v) => setConfig({...config, phpSupport: v})} />
-                  </>
-               )}
-            </div>
+                  <ToggleItem
+                    label="Suporte PHP-FPM"
+                    checked={config.phpSupport}
+                    onChange={(v) => setConfig({ ...config, phpSupport: v })}
+                  />
+                </>
+              )}
+            </FormSpace>
 
-            <div className="flex items-center gap-2 border-b border-slate-800 pb-4 pt-4">
-               <Shield size={18} className="text-emerald-500" />
-               <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest">Segurança & Performance</h3>
-            </div>
+            <SectionHeader style={{ paddingTop: "1rem" }}>
+              <Shield size={18} style={{ color: "#10b981" }} />
+              <SectionTitle>Segurança & Performance</SectionTitle>
+            </SectionHeader>
 
-            <div className="space-y-3">
-               <ToggleItem label="Habilitar SSL (HTTPS)" checked={config.useSsl} onChange={(v) => setConfig({...config, useSsl: v})} />
-               <ToggleItem label="Headers de Segurança" checked={config.securityHeaders} onChange={(v) => setConfig({...config, securityHeaders: v})} />
-               <ToggleItem label="Compressão Gzip" checked={config.useGzip} onChange={(v) => setConfig({...config, useGzip: v})} />
-               <ToggleItem label="WWW Redirect" checked={config.wwwRedirect} onChange={(v) => setConfig({...config, wwwRedirect: v})} />
-               <div className="grid grid-cols-2 gap-3">
-                  <ToggleItem label="Access Logs" checked={config.accessLog} onChange={(v) => setConfig({...config, accessLog: v})} />
-                  <ToggleItem label="Error Logs" checked={config.errorLog} onChange={(v) => setConfig({...config, errorLog: v})} />
-               </div>
-            </div>
-          </div>
+            <FormSpace>
+              <ToggleItem
+                label="Habilitar SSL (HTTPS)"
+                checked={config.useSsl}
+                onChange={(v) => setConfig({ ...config, useSsl: v })}
+              />
+              <ToggleItem
+                label="Headers de Segurança"
+                checked={config.securityHeaders}
+                onChange={(v) => setConfig({ ...config, securityHeaders: v })}
+              />
+              <ToggleItem
+                label="Compressão Gzip"
+                checked={config.useGzip}
+                onChange={(v) => setConfig({ ...config, useGzip: v })}
+              />
+              <ToggleItem
+                label="WWW Redirect"
+                checked={config.wwwRedirect}
+                onChange={(v) => setConfig({ ...config, wwwRedirect: v })}
+              />
+              <SecurityGrid>
+                <ToggleItem
+                  label="Access Logs"
+                  checked={config.accessLog}
+                  onChange={(v) => setConfig({ ...config, accessLog: v })}
+                />
+                <ToggleItem
+                  label="Error Logs"
+                  checked={config.errorLog}
+                  onChange={(v) => setConfig({ ...config, errorLog: v })}
+                />
+              </SecurityGrid>
+            </FormSpace>
+          </ConfigCard>
 
-          <div className="bg-blue-600/5 border border-blue-500/20 rounded-2xl p-4 flex gap-3 text-xs leading-relaxed text-slate-400">
-             <Info size={18} className="text-blue-500 flex-shrink-0" />
-             <p>Certifique-se de que o caminho do Certificado SSL aponta para os arquivos corretos gerados pelo <code className="text-emerald-400 font-bold">Certbot</code>.</p>
-          </div>
-        </div>
+          <InfoBox>
+            <Info size={18} style={{ color: "#3b82f6", flexShrink: 0 }} />
+            <p>
+              Certifique-se de que o caminho do Certificado SSL aponta para os
+              arquivos corretos gerados pelo{" "}
+              <code style={{ color: "#34d399", fontWeight: 700 }}>Certbot</code>
+              .
+            </p>
+          </InfoBox>
+        </ConfigSection>
 
         {/* Right: Output Preview */}
-        <div className="lg:col-span-7 flex flex-col space-y-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl h-[700px]">
-             <div className="p-6 border-b border-slate-800 bg-slate-900/50 backdrop-blur-md flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                   <div className="p-2 bg-emerald-600/10 text-emerald-500 rounded-xl">
-                      <FileCode size={20} />
-                   </div>
-                   <h3 className="text-sm font-bold text-white uppercase tracking-widest">Nginx Configuration</h3>
+        <PreviewSection>
+          <PreviewCard>
+            <PreviewHeader>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.75rem",
+                }}
+              >
+                <div
+                  style={{
+                    padding: "0.5rem",
+                    backgroundColor: "rgba(5, 150, 105, 0.1)",
+                    color: "#10b981",
+                    borderRadius: "0.75rem",
+                  }}
+                >
+                  <FileCode size={20} />
                 </div>
-                <div className="flex gap-2">
-                   <span className="px-2 py-1 bg-slate-800 rounded-lg text-[10px] font-bold text-slate-500 uppercase">Preview</span>
-                </div>
-             </div>
+                <PreviewTitle>Nginx Configuration</PreviewTitle>
+              </div>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <PreviewBadge>Preview</PreviewBadge>
+              </div>
+            </PreviewHeader>
 
-             <div className="flex-1 bg-slate-950 p-6 overflow-auto custom-scrollbar relative group">
-                <pre className="text-emerald-400 code-font text-xs leading-relaxed">
-                   {generatedConfig}
-                </pre>
-                
-                {/* Visual Glow */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full"></div>
-             </div>
+            <PreviewContent>
+              <CodeBlock>{generatedConfig}</CodeBlock>
+              <GlowEffect />
+            </PreviewContent>
 
-             <div className="p-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between">
-                <p className="text-[10px] text-slate-600 font-bold uppercase flex items-center gap-2">
-                   <Zap size={10} className="text-emerald-500" /> Otimizado para sites modernos
-                </p>
-                <div className="flex items-center gap-4">
-                   <Globe size={14} className="text-slate-800" />
-                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                </div>
-             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+            <PreviewFooter>
+              <FooterText>
+                <Zap size={10} style={{ color: "#10b981" }} /> Otimizado para
+                sites modernos
+              </FooterText>
+              <StatusIndicator>
+                <Globe size={14} style={{ color: "#1e293b" }} />
+                <StatusDot />
+              </StatusIndicator>
+            </PreviewFooter>
+          </PreviewCard>
+        </PreviewSection>
+      </Grid>
+    </Container>
   );
 };
 
-const ToggleItem = ({ label, checked, onChange }: { label: string, checked: boolean, onChange: (v: boolean) => void }) => (
-  <div className="flex items-center justify-between p-3 bg-slate-950/50 rounded-xl border border-slate-800 hover:border-slate-700 transition-all cursor-pointer" onClick={() => onChange(!checked)}>
-    <span className="text-xs font-medium text-slate-300">{label}</span>
-    <div className={`w-8 h-4 rounded-full transition-colors relative ${checked ? 'bg-emerald-600' : 'bg-slate-800'}`}>
-      <div className={`absolute top-0.5 left-0.5 w-3 h-3 bg-white rounded-full transition-transform ${checked ? 'translate-x-4' : ''}`}></div>
-    </div>
-  </div>
+const ToggleItem = ({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) => (
+  <ToggleItemContainer onClick={() => onChange(!checked)}>
+    <SimpleToggleLabel>{label}</SimpleToggleLabel>
+    <SimpleToggleSwitch $checked={checked}>
+      <SimpleToggleKnob $checked={checked} />
+    </SimpleToggleSwitch>
+  </ToggleItemContainer>
 );
 
 export default NginxConfigTool;

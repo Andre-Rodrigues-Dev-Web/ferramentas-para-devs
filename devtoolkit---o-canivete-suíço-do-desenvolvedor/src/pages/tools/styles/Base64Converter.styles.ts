@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 
 export const Container = styled.div`
-  max-width: 56rem; /* max-w-4xl */
+  max-width: 56rem;
   margin: 0 auto;
   padding-bottom: 2.5rem;
   display: flex;
@@ -20,13 +20,13 @@ export const Header = styled.div`
 export const IconWrapper = styled.div`
   display: inline-flex;
   padding: 1rem;
-  background-color: rgba(37, 99, 235, 0.1); /* blue-600/10 */
+  background-color: rgba(37, 99, 235, 0.1);
   color: ${({ theme }) => theme.colors.primary[500]};
   border-radius: ${({ theme }) => theme.borderRadius["2xl"]};
 `;
 
 export const Title = styled.h1`
-  font-size: 1.875rem; /* 3xl */
+  font-size: 1.875rem;
   font-weight: 700;
   color: ${({ theme }) => theme.colors.white};
 `;

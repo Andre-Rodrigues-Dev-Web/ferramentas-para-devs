@@ -1,9 +1,9 @@
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import * as Icons from 'lucide-react';
-import { TOOLS, CATEGORIES } from '../../../entities/tool/model';
-import styled, { css } from 'styled-components';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import * as Icons from "lucide-react";
+import { TOOLS, CATEGORIES } from "../../../entities/tool/model";
+import styled, { css } from "styled-components";
+import { Seo } from "../../../shared/ui/Seo/Seo";
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +22,7 @@ const Title = styled.h1`
   font-weight: 800;
   letter-spacing: -0.025em;
   color: ${({ theme }) => theme.colors.white};
-  
+
   span {
     color: ${({ theme }) => theme.colors.primary[500]};
   }
@@ -47,29 +47,31 @@ const CategoryButton = styled.button<{ $isActive: boolean }>`
   font-weight: 500;
   transition: all 0.2s;
   cursor: pointer;
-  border: 1px solid ${({ $isActive, theme }) => $isActive ? 'transparent' : theme.colors.slate[800]};
+  border: 1px solid
+    ${({ $isActive, theme }) =>
+      $isActive ? "transparent" : theme.colors.slate[800]};
 
   ${({ $isActive, theme }) =>
     $isActive
       ? css`
-        background-color: ${theme.colors.primary[600]};
-        color: ${theme.colors.white};
-        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
-      `
+          background-color: ${theme.colors.primary[600]};
+          color: ${theme.colors.white};
+          box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
+        `
       : css`
-        background-color: ${theme.colors.slate[900]};
-        color: ${theme.colors.slate[400]};
-        &:hover {
-          border-color: ${theme.colors.slate[700]};
-        }
-      `}
+          background-color: ${theme.colors.slate[900]};
+          color: ${theme.colors.slate[400]};
+          &:hover {
+            border-color: ${theme.colors.slate[700]};
+          }
+        `}
 `;
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
-  
+
   @media (min-width: ${({ theme }) => theme.screens.sm}) {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -92,15 +94,14 @@ const ToolCard = styled(Link)`
 
   &:hover {
     transform: translateY(-0.25rem);
-    border-color: rgba(59, 130, 246, 0.5); /* blue-500/50 */
-    box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.05); /* blue-500/5 */
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.05);
   }
 
-  /* Group hover implementation for children */
   &:hover h3 {
     color: ${({ theme }) => theme.colors.primary[400]};
   }
-  
+
   &:hover svg.arrow-icon {
     transform: translateX(0.25rem);
     color: ${({ theme }) => theme.colors.primary[400]};
@@ -118,17 +119,17 @@ const IconWrapper = styled.div<{ $isImplemented: boolean }>`
   padding: 0.75rem;
   border-radius: ${({ theme }) => theme.borderRadius.xl};
   transition: background-color 0.2s;
-  
+
   ${({ $isImplemented, theme }) =>
     $isImplemented
       ? css`
-        background-color: rgba(37, 99, 235, 0.1);
-        color: ${theme.colors.primary[500]};
-      `
+          background-color: rgba(37, 99, 235, 0.1);
+          color: ${theme.colors.primary[500]};
+        `
       : css`
-        background-color: ${theme.colors.slate[800]};
-        color: ${theme.colors.slate[600]};
-      `}
+          background-color: ${theme.colors.slate[800]};
+          color: ${theme.colors.slate[600]};
+        `}
 `;
 
 const Badge = styled.span`
@@ -176,37 +177,46 @@ const CategoryLabel = styled.span`
 `;
 
 const Dashboard: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<string>('Tudo');
+  const [activeCategory, setActiveCategory] = useState<string>("Tudo");
 
   const getIcon = (name: string) => {
     const IconComponent = (Icons as any)[name];
-    return IconComponent ? <IconComponent size={24} /> : <Icons.HelpCircle size={24} />;
+    return IconComponent ? (
+      <IconComponent size={24} />
+    ) : (
+      <Icons.HelpCircle size={24} />
+    );
   };
 
-  const filteredTools = activeCategory === 'Tudo' 
-    ? TOOLS 
-    : TOOLS.filter(t => t.category === activeCategory);
+  const filteredTools =
+    activeCategory === "Tudo"
+      ? TOOLS
+      : TOOLS.filter((t) => t.category === activeCategory);
 
   return (
     <Container>
+      <Seo
+        title="Dashboard"
+        description="Acesse todas as ferramentas de desenvolvimento em um só lugar. JSON, CSS, SQL, e muito mais."
+      />
       <Header>
         <Title>
           Sua Caixa de Ferramentas <span>Digital</span>
         </Title>
         <Description>
-          Tudo o que você precisa para acelerar seu desenvolvimento em um só lugar. Moderno, rápido e 100% gratuito.
+          Tudo o que você precisa para acelerar seu desenvolvimento em um só
+          lugar. Moderno, rápido e 100% gratuito.
         </Description>
       </Header>
 
-      {/* Categories Filter */}
       <CategoryFilter>
         <CategoryButton
-          onClick={() => setActiveCategory('Tudo')}
-          $isActive={activeCategory === 'Tudo'}
+          onClick={() => setActiveCategory("Tudo")}
+          $isActive={activeCategory === "Tudo"}
         >
           Tudo
         </CategoryButton>
-        {CATEGORIES.map(cat => (
+        {CATEGORIES.map((cat) => (
           <CategoryButton
             key={cat}
             onClick={() => setActiveCategory(cat)}
@@ -217,36 +227,24 @@ const Dashboard: React.FC = () => {
         ))}
       </CategoryFilter>
 
-      {/* Tools Grid */}
       <Grid>
-        {filteredTools.map(tool => (
-          <ToolCard
-            key={tool.id}
-            to={`/tool/${tool.slug}`}
-          >
+        {filteredTools.map((tool) => (
+          <ToolCard key={tool.id} to={`/tool/${tool.slug}`}>
             <ToolHeader>
               <IconWrapper $isImplemented={tool.isImplemented}>
                 {getIcon(tool.icon)}
               </IconWrapper>
-              {!tool.isImplemented && (
-                <Badge>
-                  Em Breve
-                </Badge>
-              )}
+              {!tool.isImplemented && <Badge>Em Breve</Badge>}
             </ToolHeader>
-            <ToolTitle>
-              {tool.title}
-            </ToolTitle>
-            <ToolDescription>
-              {tool.description}
-            </ToolDescription>
+            <ToolTitle>{tool.title}</ToolTitle>
+            <ToolDescription>{tool.description}</ToolDescription>
             <ToolFooter>
-               <CategoryLabel>{tool.category}</CategoryLabel>
-               <Icons.ArrowRight 
-                 size={16} 
-                 className="arrow-icon" // Targeted by ToolCard:hover
-                 style={{ transition: 'all 0.2s', color: '#475569' }} 
-               />
+              <CategoryLabel>{tool.category}</CategoryLabel>
+              <Icons.ArrowRight
+                size={16}
+                className="arrow-icon"
+                style={{ transition: "all 0.2s", color: "#475569" }}
+              />
             </ToolFooter>
           </ToolCard>
         ))}

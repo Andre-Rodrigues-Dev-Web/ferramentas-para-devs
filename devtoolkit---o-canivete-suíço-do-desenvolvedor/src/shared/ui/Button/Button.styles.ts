@@ -23,14 +23,14 @@ export const ButtonContainer = styled.button<StyledButtonProps>`
       0 0 0 4px ${({ theme }) => theme.colors.primary[500]};
   }
 
-  /* Variants */
+  
   ${({ $variant, theme }) => {
     switch ($variant) {
       case "primary":
         return css`
           background-color: ${theme.colors.primary[600]};
           color: ${theme.colors.white};
-          box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2); /* blue-500/20 roughly */
+          box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2);
           &:hover {
             background-color: ${theme.colors.primary[700]};
           }
@@ -75,7 +75,7 @@ export const ButtonContainer = styled.button<StyledButtonProps>`
     }
   }}
 
-  /* Sizes */
+  
   ${({ $size }) => {
     switch ($size) {
       case "sm":

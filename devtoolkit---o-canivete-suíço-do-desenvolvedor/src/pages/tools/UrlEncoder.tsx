@@ -1,12 +1,28 @@
-
-import React, { useState } from 'react';
-import { Link, Copy, Check, RefreshCw } from 'lucide-react';
-import { Button } from '../../shared/ui/Button';
-import { Textarea } from '../../shared/ui/Input';
+import React, { useState } from "react";
+import { Link } from "lucide-react";
+import { Button } from "../../shared/ui/Button";
+import { Textarea } from "../../shared/ui/Input";
+import {
+  Container,
+  Header,
+  IconWrapper,
+  TitleContainer,
+  Title,
+  Description,
+  EncoderCard,
+  InputGroup,
+  Label,
+  ActionButtons,
+  ResultSection,
+  ResultHeader,
+  CopyButton,
+  ResultBox,
+  Placeholder,
+} from "./styles/UrlEncoder.styles";
 
 const UrlEncoder: React.FC = () => {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
   const [copied, setCopied] = useState(false);
 
   const handleEncode = () => setOutput(encodeURIComponent(input));
@@ -14,7 +30,7 @@ const UrlEncoder: React.FC = () => {
     try {
       setOutput(decodeURIComponent(input));
     } catch (e) {
-      setOutput('ERRO: URL malformada.');
+      setOutput("ERRO: URL malformada.");
     }
   };
 
@@ -25,46 +41,53 @@ const UrlEncoder: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-10">
-      <div className="flex items-center gap-4">
-        <div className="p-3 bg-blue-600/10 text-blue-500 rounded-2xl">
+    <Container>
+      <Header>
+        <IconWrapper>
           <Link size={32} />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold text-white">URL Encoder / Decoder</h1>
-          <p className="text-slate-400">Codifique ou decodifique caracteres especiais para uso seguro em URLs.</p>
-        </div>
-      </div>
+        </IconWrapper>
+        <TitleContainer>
+          <Title>URL Encoder / Decoder</Title>
+          <Description>
+            Codifique ou decodifique caracteres especiais para uso seguro em
+            URLs.
+          </Description>
+        </TitleContainer>
+      </Header>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6">
-        <div className="space-y-4">
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest block">Input Text / URL</label>
-          <Textarea 
-            value={input} 
-            onChange={(e) => setInput(e.target.value)} 
-            placeholder="Cole o texto ou URL aqui..." 
-            className="h-40 border-slate-800"
+      <EncoderCard>
+        <InputGroup>
+          <Label>Input Text / URL</Label>
+          <Textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Cole o texto ou URL aqui..."
+            style={{ height: "10rem", borderColor: "#1e293b" }}
           />
-        </div>
+        </InputGroup>
 
-        <div className="flex gap-4">
-          <Button onClick={handleEncode} className="flex-1">Encodar</Button>
-          <Button variant="outline" onClick={handleDecode} className="flex-1">Decodar</Button>
-        </div>
+        <ActionButtons>
+          <Button onClick={handleEncode} style={{ flex: 1 }}>
+            Encodar
+          </Button>
+          <Button variant="outline" onClick={handleDecode} style={{ flex: 1 }}>
+            Decodar
+          </Button>
+        </ActionButtons>
 
-        <div className="space-y-4 pt-4 border-t border-slate-800">
-           <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Resultado</label>
-              <button disabled={!output} onClick={copy} className="text-xs text-blue-400 hover:text-blue-300">
-                {copied ? 'Copiado!' : 'Copiar'}
-              </button>
-           </div>
-           <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 min-h-20 text-blue-400 break-all code-font">
-             {output || <span className="text-slate-700 italic">O resultado aparecerá aqui...</span>}
-           </div>
-        </div>
-      </div>
-    </div>
+        <ResultSection>
+          <ResultHeader>
+            <Label>Resultado</Label>
+            <CopyButton disabled={!output} onClick={copy}>
+              {copied ? "Copiado!" : "Copiar"}
+            </CopyButton>
+          </ResultHeader>
+          <ResultBox>
+            {output || <Placeholder>O resultado aparecerá aqui...</Placeholder>}
+          </ResultBox>
+        </ResultSection>
+      </EncoderCard>
+    </Container>
   );
 };
 

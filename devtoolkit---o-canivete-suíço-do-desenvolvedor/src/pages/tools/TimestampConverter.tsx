@@ -1,13 +1,37 @@
-
-import React, { useState, useEffect } from 'react';
-import { History, Clock, Calendar, RefreshCw, Copy, Check } from 'lucide-react';
-import { Button } from '../../shared/ui/Button';
-import { Input } from '../../shared/ui/Input';
+import React, { useState, useEffect } from "react";
+import { History, Clock, Calendar, RefreshCw, Copy } from "lucide-react";
+import { Input } from "../../shared/ui/Input";
+import {
+  Container,
+  Header,
+  IconWrapper,
+  TitleContainer,
+  Title,
+  Description,
+  ConverterCard,
+  InputSection,
+  InputHeader,
+  Label,
+  UseNowButton,
+  InputRow,
+  Hint,
+  ResultsGrid,
+  ResultBox,
+  ResultLabel,
+  ResultValue,
+  CopyButton,
+  UnitsGrid,
+  UnitCard,
+  UnitLabel,
+  UnitValue,
+} from "./styles/TimestampConverter.styles";
 
 const TimestampConverter: React.FC = () => {
-  const [timestamp, setTimestamp] = useState<string>(Math.floor(Date.now() / 1000).toString());
-  const [dateStr, setDateStr] = useState<string>('');
-  const [isoStr, setIsoStr] = useState<string>('');
+  const [timestamp, setTimestamp] = useState<string>(
+    Math.floor(Date.now() / 1000).toString(),
+  );
+  const [dateStr, setDateStr] = useState<string>("");
+  const [isoStr, setIsoStr] = useState<string>("");
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -17,11 +41,11 @@ const TimestampConverter: React.FC = () => {
   const handleTimestampChange = (val: string) => {
     setTimestamp(val);
     if (!val) {
-      setDateStr('');
-      setIsoStr('');
+      setDateStr("");
+      setIsoStr("");
       return;
     }
-    
+
     try {
       let num = parseInt(val);
       // Determine if ms or s
@@ -30,15 +54,15 @@ const TimestampConverter: React.FC = () => {
       } else {
         num = num * 1000;
       }
-      
+
       const date = new Date(num);
       if (isNaN(date.getTime())) throw new Error();
-      
+
       setDateStr(date.toLocaleString());
       setIsoStr(date.toISOString());
     } catch {
-      setDateStr('Data Inválida');
-      setIsoStr('Data Inválida');
+      setDateStr("Data Inválida");
+      setIsoStr("Data Inválida");
     }
   };
 
@@ -53,74 +77,84 @@ const TimestampConverter: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-10">
-      <div className="flex items-center gap-4">
-        <div className="p-3 bg-blue-600/10 text-blue-500 rounded-2xl">
+    <Container>
+      <Header>
+        <IconWrapper>
           <History size={32} />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold text-white">Unix Timestamp Converter</h1>
-          <p className="text-slate-400">Converta timestamps do Unix em datas legíveis e vice-versa.</p>
-        </div>
-      </div>
+        </IconWrapper>
+        <TitleContainer>
+          <Title>Unix Timestamp Converter</Title>
+          <Description>
+            Converta timestamps do Unix em datas legíveis e vice-versa.
+          </Description>
+        </TitleContainer>
+      </Header>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 space-y-8">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Unix Timestamp</label>
-            <button onClick={setNow} className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 font-bold">
+      <ConverterCard>
+        <InputSection>
+          <InputHeader>
+            <Label>Unix Timestamp</Label>
+            <UseNowButton onClick={setNow}>
               <RefreshCw size={12} /> USAR AGORA
-            </button>
-          </div>
-          <div className="flex gap-3">
-             <Input 
-               value={timestamp} 
-               onChange={(e) => handleTimestampChange(e.target.value)} 
-               placeholder="Ex: 1715856000" 
-               className="flex-1 text-2xl font-bold py-6 code-font"
-             />
-          </div>
-          <p className="text-[10px] text-slate-500 font-bold uppercase">Suporta Segundos (10 dígitos) e Milissegundos (13 dígitos)</p>
-        </div>
+            </UseNowButton>
+          </InputHeader>
+          <InputRow>
+            <Input
+              value={timestamp}
+              onChange={(e) => handleTimestampChange(e.target.value)}
+              placeholder="Ex: 1715856000"
+              style={{
+                flex: 1,
+                fontSize: "1.5rem",
+                fontWeight: 700,
+                fontFamily: "monospace",
+                padding: "1.5rem",
+              }}
+            />
+          </InputRow>
+          <Hint>
+            Suporta Segundos (10 dígitos) e Milissegundos (13 dígitos)
+          </Hint>
+        </InputSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-2 relative group">
-              <span className="text-[10px] font-bold text-slate-500 uppercase flex items-center gap-1.5">
-                <Calendar size={12} /> Local Time
-              </span>
-              <div className="text-xl font-bold text-blue-400 truncate pr-8">{dateStr}</div>
-              <button onClick={() => copy(dateStr)} className="absolute right-4 top-1/2 -translate-y-1/2 p-2 opacity-0 group-hover:opacity-100 transition-all text-slate-500 hover:text-blue-400">
-                <Copy size={18} />
-              </button>
-           </div>
+        <ResultsGrid>
+          <ResultBox>
+            <ResultLabel>
+              <Calendar size={12} /> Local Time
+            </ResultLabel>
+            <ResultValue>{dateStr}</ResultValue>
+            <CopyButton onClick={() => copy(dateStr)}>
+              <Copy size={18} />
+            </CopyButton>
+          </ResultBox>
 
-           <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-2 relative group">
-              <span className="text-[10px] font-bold text-slate-500 uppercase flex items-center gap-1.5">
-                <Clock size={12} /> ISO 8601
-              </span>
-              <div className="text-xl font-bold text-blue-400 truncate pr-8">{isoStr}</div>
-              <button onClick={() => copy(isoStr)} className="absolute right-4 top-1/2 -translate-y-1/2 p-2 opacity-0 group-hover:opacity-100 transition-all text-slate-500 hover:text-blue-400">
-                <Copy size={18} />
-              </button>
-           </div>
-        </div>
-      </div>
+          <ResultBox>
+            <ResultLabel>
+              <Clock size={12} /> ISO 8601
+            </ResultLabel>
+            <ResultValue>{isoStr}</ResultValue>
+            <CopyButton onClick={() => copy(isoStr)}>
+              <Copy size={18} />
+            </CopyButton>
+          </ResultBox>
+        </ResultsGrid>
+      </ConverterCard>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 opacity-60">
-         <div className="text-center p-4 bg-slate-900 border border-slate-800 rounded-2xl">
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Minuto</p>
-            <p className="text-lg font-bold text-white">60 s</p>
-         </div>
-         <div className="text-center p-4 bg-slate-900 border border-slate-800 rounded-2xl">
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Hora</p>
-            <p className="text-lg font-bold text-white">3,600 s</p>
-         </div>
-         <div className="text-center p-4 bg-slate-900 border border-slate-800 rounded-2xl">
-            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Dia</p>
-            <p className="text-lg font-bold text-white">86,400 s</p>
-         </div>
-      </div>
-    </div>
+      <UnitsGrid>
+        <UnitCard>
+          <UnitLabel>Minuto</UnitLabel>
+          <UnitValue>60 s</UnitValue>
+        </UnitCard>
+        <UnitCard>
+          <UnitLabel>Hora</UnitLabel>
+          <UnitValue>3,600 s</UnitValue>
+        </UnitCard>
+        <UnitCard>
+          <UnitLabel>Dia</UnitLabel>
+          <UnitValue>86,400 s</UnitValue>
+        </UnitCard>
+      </UnitsGrid>
+    </Container>
   );
 };
 

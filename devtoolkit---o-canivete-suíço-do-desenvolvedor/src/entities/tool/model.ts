@@ -1,7 +1,6 @@
 import { Tool } from "../../shared/types";
 
 export const TOOLS: Tool[] = [
-  // FRONT-END VISUAL
   {
     id: "1",
     title: "CSS Gradient",
@@ -75,7 +74,6 @@ export const TOOLS: Tool[] = [
     isImplemented: true,
   },
 
-  // ASSETS
   {
     id: "9",
     title: "TinyPNG",
@@ -131,7 +129,6 @@ export const TOOLS: Tool[] = [
     isImplemented: true,
   },
 
-  // JS & LÓGICA
   {
     id: "15",
     title: "Regex Tester",
@@ -187,7 +184,6 @@ export const TOOLS: Tool[] = [
     isImplemented: true,
   },
 
-  // BACK-END & SEGURANÇA
   {
     id: "21",
     title: "JWT Decoder",
@@ -234,7 +230,6 @@ export const TOOLS: Tool[] = [
     isImplemented: true,
   },
 
-  // DADOS
   {
     id: "26",
     title: "SQL Fiddle",
@@ -271,8 +266,16 @@ export const TOOLS: Tool[] = [
     description: "Codifique ou decodifique parâmetros de URL.",
     isImplemented: true,
   },
+  {
+    id: "99",
+    title: "SQL to NoSQL",
+    slug: "sql-to-nosql",
+    category: "Dados",
+    icon: "Database",
+    description: "Converta scripts SQL para estruturas NoSQL (JSON).",
+    isImplemented: true,
+  },
 
-  // INFRA
   {
     id: "30",
     title: "Crontab Guru",
@@ -337,7 +340,6 @@ export const TOOLS: Tool[] = [
     isImplemented: true,
   },
 
-  // ÚTEIS
   {
     id: "37",
     title: "Diffchecker",
@@ -381,6 +383,16 @@ export const TOOLS: Tool[] = [
     category: "Úteis",
     icon: "Rocket",
     description: "Comece seus projetos em segundos com 30+ templates.",
+    isImplemented: true,
+  },
+  {
+    id: "100",
+    title: "Platform Converter",
+    slug: "code-converter",
+    category: "Úteis",
+    icon: "RefreshCw",
+    description:
+      "Converta HTML/CSS/JS para React, Vue, Angular, Mobile e mais.",
     isImplemented: true,
   },
 ];

@@ -1,7 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
 
   *, *::before, *::after {
     box-sizing: border-box;
@@ -16,7 +16,7 @@ export const GlobalStyles = createGlobalStyle`
 
   body {
     font-family: 'Inter', sans-serif;
-    background-color: ${({ theme }) => theme.colors.slate[950]};
+    background-color: #0D0D0D;
     color: ${({ theme }) => theme.colors.slate[200]};
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
