@@ -186,7 +186,6 @@ const BundlePhobiaTool: React.FC = () => {
     setLoading(true);
     setResult(null);
 
-    // Simulação de delay de análise
     await new Promise((resolve) =>
       setTimeout(resolve, 1200 + Math.random() * 800),
     );
